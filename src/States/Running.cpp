@@ -1,10 +1,10 @@
 #include "Running.h"
 
-#include "Stop.h"
-
 #include "../Command.h"
 #include "../Exception.h"
 #include "../StateMachine.h"
+#include "../Database.h"
+#include "../LogDataDTO.h"
 
 #include "spdlog/fmt/fmt.h"
 
@@ -25,24 +25,20 @@ namespace State
     {
         try
         {
-            // std::cout << "Running " << xIn.GetAddInfos() << "\n";
-
             if (xIn.GetType() != CommandType::Stop)
-                throw std::runtime_error(std::string{"Wrong CommandType, expected stop command"});
+                throw std::runtime_error("Wrong CommandType, expected stop command");
 
-            auto end = std::chrono::system_clock::now();
+            LogData tDTO;
+            tDTO.description = mAddInfos;
+            tDTO.start = mStart;
+            tDTO.end = std::chrono::system_clock::now();
+            tDTO.duration = static_cast<int>(std::chrono::duration_cast<std::chrono::seconds>(tDTO.end - mStart).count());
 
-            std::chrono::duration<double> elapsed_seconds = end - mStart;
-            std::time_t end_time = std::chrono::system_clock::to_time_t(end);
-            std::time_t start_time = std::chrono::system_clock::to_time_t(mStart);
-            std::string tEndTime{std::ctime(&end_time), 24};
-            std::string tStartTime{std::ctime(&start_time), 24};
+            std::shared_ptr<Start> tNewState = std::make_shared<Start>();
+            xStateMachine.SetSate(tNewState);
 
-            std::shared_ptr<Stop> tNewState = std::make_shared<Stop>(xStateMachine, fmt::format("{}; {}; {}; {};",
-                                                                                                tStartTime,
-                                                                                                tEndTime,
-                                                                                                mAddInfos,
-                                                                                                elapsed_seconds.count() / 60));
+            if (!Database::write(tDTO))
+                throw std::runtime_error("Can't write data to db.");
 
             return true;
         }
