@@ -5,27 +5,36 @@
 
 #include <iostream>
 
-StateMachine::StateMachine(const std::shared_ptr<State::State_Interface> &xIn) noexcept
-    : mState{xIn}
+StateMachine::StateMachine(std::unique_ptr<State::State_Interface> &&xIn) noexcept
+    : mState{std::move(xIn)}
 {
 }
 
 StateMachine::~StateMachine() noexcept
 {
-    Apply(Command{CommandType::Stop, ""});
+    Apply(Command{CommandType::Stop});
 }
 
-StateMachine &StateMachine::SetSate(const std::shared_ptr<State::State_Interface> &xIn) noexcept
+StateMachine &StateMachine::SetSate(std::unique_ptr<State::State_Interface> &&xIn) noexcept
 {
-    mState = xIn;
+    mState = std::move(xIn);
+    fmt::print("Acctual state: {}\n", mState->Name());
     return *this;
 }
-const std::shared_ptr<State::State_Interface> &StateMachine::GetState() const noexcept
+const std::unique_ptr<State::State_Interface> &StateMachine::GetState() const noexcept
 {
     return mState;
 }
 
-bool StateMachine::Apply(const Command &xIn) noexcept
+std::string StateMachine::GetStatus() const noexcept
+{
+    if (mState)
+        return mState->Name();
+    else
+        return "No State set.";
+}
+
+bool StateMachine::Apply(Command &&xIn) noexcept
 {
     if (xIn.GetType() == CommandType::Error)
     {
@@ -34,8 +43,13 @@ bool StateMachine::Apply(const Command &xIn) noexcept
 
         return true;
     }
+    else if (xIn.GetType() == CommandType::Status)
+    {
+        fmt::print("Acctual state: {}, acctual command: {}\n", mState->Name(), mState->GetCommand());
+        return true;
+    }
     else
     {
-        return mState->Apply(*this, xIn);
+        return mState->Apply(*this, std::move(xIn));
     }
 }

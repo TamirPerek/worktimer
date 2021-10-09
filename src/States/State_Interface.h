@@ -11,7 +11,8 @@ namespace State
     {
     public:
         virtual ~State_Interface() noexcept = default;
-        virtual bool Apply(StateMachine &, const Command &) noexcept = 0;
+        virtual bool Apply(StateMachine &, Command &&) noexcept = 0;
         virtual std::string Name() const noexcept = 0;
+        virtual std::string GetCommand() const noexcept = 0;
     };
 }

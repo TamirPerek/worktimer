@@ -21,7 +21,7 @@ namespace State
         : mStart{std::chrono::system_clock::now()}, mAddInfos{xIn}
     {
     }
-    bool Running::Apply(StateMachine &xStateMachine, const Command &xIn) noexcept
+    bool Running::Apply(StateMachine &xStateMachine, Command &&xIn) noexcept
     {
         try
         {
@@ -34,8 +34,7 @@ namespace State
             tDTO.end = std::chrono::system_clock::now();
             tDTO.duration = static_cast<int>(std::chrono::duration_cast<std::chrono::seconds>(tDTO.end - mStart).count());
 
-            std::shared_ptr<Start> tNewState = std::make_shared<Start>();
-            xStateMachine.SetSate(tNewState);
+            xStateMachine.SetSate(std::make_unique<Start>());
 
             if (!Database::write(tDTO))
                 THROWSTATE("Can't write data to db: {}", tDTO.description);

@@ -12,11 +12,12 @@ namespace State
         std::string mAddInfos{};
 
     public:
-         Running();
+        Running();
         explicit Running(const std::string_view &);
-        ~Running() noexcept override = default;
-        bool Apply(StateMachine &, const Command &) noexcept override;
+        ~Running() noexcept final = default;
+        bool Apply(StateMachine &, Command &&) noexcept final;
         void StartTimer() noexcept;
-        std::string Name() const noexcept override { return "Running"; }
+        std::string Name() const noexcept final { return "Running"; }
+        std::string GetCommand() const noexcept final { return mAddInfos; }
     };
 }

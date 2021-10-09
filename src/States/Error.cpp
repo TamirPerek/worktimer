@@ -7,7 +7,7 @@
 
 namespace State
 {
-    bool Error::Apply(StateMachine &xStateMachine, const Command &xIn) noexcept
+    bool Error::Apply(StateMachine &xStateMachine, Command &&xIn) noexcept
     {
         Logger::getInstance().getLogger()->error("Can't Validate Command: {}", xIn.GetAddInfos());
         Logger::getInstance().getLogger()->flush();

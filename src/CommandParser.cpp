@@ -18,14 +18,17 @@ Command CommandParser::read() const noexcept
         if (tPos != std::string::npos)
             tCommand = tCompleteCommand.substr(tPos + 1);
 
-        if (std::regex tStart{R"(^-[sS][tT][aA][rR][tT].*)"}; std::regex_match(tCompleteCommand, tStart))
+        if (const std::regex tRegex{R"(^-[sS][tT][aA][rR][tT].*)"}; std::regex_match(tCompleteCommand, tRegex))
             return Command{CommandType::Start, tCommand};
 
-        if (std::regex tStart{R"(^-[sS][tT][oO][pP].*)"}; std::regex_match(tCompleteCommand, tStart))
-            return Command{CommandType::Stop, tCommand};
+        if (const std::regex tRegex{R"(^-[sS][tT][oO][pP].*)"}; std::regex_match(tCompleteCommand, tRegex))
+            return Command{CommandType::Stop};
 
-        if (std::regex tStart{R"(^-[eE][xX][iI][tT].*)"}; std::regex_match(tCompleteCommand, tStart))
+        if (const std::regex tRegex{R"(^-[eE][xX][iI][tT].*)"}; std::regex_match(tCompleteCommand, tRegex))
             exit(EXIT_SUCCESS);
+
+        if (const std::regex tRegex{R"(^-[sS][tT][aA][tT][uU][sS].*)"}; std::regex_match(tCompleteCommand, tRegex))
+            return Command{CommandType::Status};
 
         return Command{CommandType::Error, tCompleteCommand};
     }

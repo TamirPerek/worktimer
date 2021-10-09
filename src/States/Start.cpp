@@ -10,15 +10,14 @@
 
 namespace State
 {
-    bool Start::Apply(StateMachine &xStateMachine, const Command &xIn) noexcept
+    bool Start::Apply(StateMachine &xStateMachine, Command &&xIn) noexcept
     {
         try
         {
             if (xIn.GetType() != CommandType::Start)
                 THROWSTATE("Wrong CommandType, expected {} command", "Start");
 
-            std::shared_ptr<Running> tNewState = std::make_shared<Running>(xIn.GetAddInfos());
-            xStateMachine.SetSate(tNewState);
+            xStateMachine.SetSate(std::make_unique<Running>(xIn.GetAddInfos()));
 
             return true;
         }

@@ -6,19 +6,19 @@ enum class CommandType
 {
     Start,
     Stop,
-    Error
+    Error,
+    Status
 };
 
 class Command
 {
 private:
-    const CommandType mType{CommandType::Start};
-    const std::string mAddInfos{""};
+    CommandType mType{CommandType::Start};
+    std::string mAddInfos{""};
 public:
-    Command() = delete;
-    explicit Command(const CommandType &, const std::string_view &);
-    ~Command() = default;
-
+    Command() = default;
+    explicit Command(const CommandType &, const std::string_view &xAddInfos = "");
+    
     const CommandType &GetType() const noexcept;
     const std::string &GetAddInfos() const noexcept;
 };
