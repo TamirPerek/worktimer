@@ -2,6 +2,7 @@
 
 #include "Command.h"
 #include "Logger.h"
+#include "Dump.h"
 
 #include <iostream>
 
@@ -36,20 +37,27 @@ std::string StateMachine::GetStatus() const noexcept
 
 bool StateMachine::Apply(Command &&xIn) noexcept
 {
-    if (xIn.GetType() == CommandType::Error)
+    switch (xIn.GetType())
+    {
+    case CommandType::Error:
     {
         Logger::getInstance().getLogger()->info("Can't Validate Command: {}", xIn.GetAddInfos());
         Logger::getInstance().getLogger()->flush();
 
         return true;
     }
-    else if (xIn.GetType() == CommandType::Status)
+    case CommandType::Status:
     {
         fmt::print("Acctual state: {}, acctual command: {}\n", mState->Name(), mState->GetCommand());
         return true;
     }
-    else
+    case CommandType::Dump:
     {
+        Dump::DumpDatabase(std::filesystem::current_path() / gDumpPath);
+        return true;
+    }
+
+    default:
         return mState->Apply(*this, std::move(xIn));
     }
 }

@@ -23,6 +23,11 @@ namespace Exception
             Logger::getInstance().getLogger()->error("StateException: {}", e.what());
             Logger::getInstance().getLogger()->flush();
         }
+        catch (const DumpException &e)
+        {
+            Logger::getInstance().getLogger()->error("DumpException: {}", e.what());
+            Logger::getInstance().getLogger()->flush();
+        }
         catch (const DatabaseException &e)
         {
             Logger::getInstance().getLogger()->error("DatabaseException: {}", e.what());

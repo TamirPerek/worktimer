@@ -7,7 +7,8 @@ enum class CommandType
     Start,
     Stop,
     Error,
-    Status
+    Status,
+    Dump
 };
 
 class Command

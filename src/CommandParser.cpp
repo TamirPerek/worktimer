@@ -30,6 +30,9 @@ Command CommandParser::read() const noexcept
         if (const std::regex tRegex{R"(^-[sS][tT][aA][tT][uU][sS].*)"}; std::regex_match(tCompleteCommand, tRegex))
             return Command{CommandType::Status};
 
+        if (const std::regex tRegex{R"(^-[dD][uU][mM][pP].*)"}; std::regex_match(tCompleteCommand, tRegex))
+            return Command{CommandType::Dump};
+
         return Command{CommandType::Error, tCompleteCommand};
     }
     catch (...)
