@@ -2,7 +2,7 @@
 
 #include <filesystem>
 
-static constexpr std::string_view gDumpPath{"output/dump.csv"};
+static constexpr std::string_view gDumpPath{"dump.csv"};
 
 class Dump
 {
