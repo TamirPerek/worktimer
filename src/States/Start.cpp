@@ -15,7 +15,7 @@ namespace State
         try
         {
             if (xIn.GetType() != CommandType::Start)
-                throw std::runtime_error("Wrong CommandType, expected start command");
+                THROWSTATE("Wrong CommandType, expected {} command", "Start");
 
             std::shared_ptr<Running> tNewState = std::make_shared<Running>(xIn.GetAddInfos());
             xStateMachine.SetSate(tNewState);

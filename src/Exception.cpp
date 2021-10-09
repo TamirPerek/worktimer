@@ -18,6 +18,16 @@ namespace Exception
         {
             throw;
         }
+        catch (const StateException &e)
+        {
+            Logger::getInstance().getLogger()->error("StateException: {}", e.what());
+            Logger::getInstance().getLogger()->flush();
+        }
+        catch (const DatabaseException &e)
+        {
+            Logger::getInstance().getLogger()->error("DatabaseException: {}", e.what());
+            Logger::getInstance().getLogger()->flush();
+        }
         catch (const std::exception &e)
         {
             Logger::getInstance().getLogger()->error(e.what());

@@ -26,7 +26,7 @@ namespace State
         try
         {
             if (xIn.GetType() != CommandType::Stop)
-                throw std::runtime_error("Wrong CommandType, expected stop command");
+                THROWSTATE("Wrong CommandType, expected {} command", "Stop");
 
             LogData tDTO;
             tDTO.description = mAddInfos;
@@ -38,7 +38,7 @@ namespace State
             xStateMachine.SetSate(tNewState);
 
             if (!Database::write(tDTO))
-                throw std::runtime_error("Can't write data to db.");
+                THROWSTATE("Can't write data to db: {}", tDTO.description);
 
             return true;
         }

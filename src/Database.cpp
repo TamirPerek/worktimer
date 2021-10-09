@@ -6,7 +6,7 @@
 
 extern "C"
 {
-#include <sqlite3.h>
+#include "../lib/SQLite/sqlite3.h"
 }
 #include <filesystem>
 #include "spdlog/fmt/fmt.h"
@@ -22,16 +22,19 @@ bool Database::write(const LogData &xDTO) noexcept
                                                static_cast<int>(std::chrono::duration_cast<std::chrono::seconds>(xDTO.end.time_since_epoch()).count()),
                                                xDTO.duration);
 
-        const std::filesystem::path gTestDBPath = StaticData::pathToDB;
+        const std::filesystem::path gTestDBPath = std::filesystem::current_path() / StaticData::pathToDB;
 
-        if (!std::filesystem::exists(gTestDBPath.relative_path()))
-            throw std::runtime_error(fmt::format("file does not exist: {}", gTestDBPath.string()));
+        if (std::error_code er; !std::filesystem::exists(gTestDBPath, er))
+            THROWDB("file does not exist: {}, {}", gTestDBPath.string(), er.message());
 
-        if (const int rc = sqlite3_open(gTestDBPath.relative_path().string().c_str(), &tDB); rc != SQLITE_OK)
-            throw std::runtime_error(fmt::format("Can not open Database: {}", rc));
+        if (const auto rc = sqlite3_open(gTestDBPath.string().c_str(), &tDB); rc != SQLITE_OK)
+            THROWDB("Can not open Database: {}", rc);
 
-        if (const int rc = sqlite3_exec(tDB, tSQLStatement.data(), nullptr, nullptr, nullptr); rc != SQLITE_OK)
-            throw std::runtime_error(fmt::format("Can't execute Database querry: {}", rc));
+        if (const auto rc = sqlite3_exec(tDB, tSQLStatement.data(), nullptr, nullptr, nullptr); rc != SQLITE_OK)
+            THROWDB("Can't execute Database querry: {}", rc);
+
+        if (const auto rc = sqlite3_close(tDB); rc != SQLITE_OK)
+            THROWDB("Can't close database: {}", rc);
 
         return true;
     }

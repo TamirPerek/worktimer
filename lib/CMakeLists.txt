@@ -10,12 +10,15 @@ set(BUILD_GTEST ON CACHE BOOL "" FORCE)
 
 FetchContent_MakeAvailable(googletest)
 
-FetchContent_Declare(sqlite3 URL "https://www.sqlite.org/2021/sqlite-amalgamation-3360000.zip")
-if (NOT sqlite3_POPULATED)
-  # notice that we do not call `add_subdirectory`, we simply fetch and then
-  # use the subdirectory sources directly.
-  FetchContent_Populate(sqlite3)
-endif()
+#===== SQLite3 ====================#
+# FetchContent_Declare(sqlite3 URL "https://www.sqlite.org/2021/sqlite-amalgamation-3360000.zip")
+# if (NOT sqlite3_POPULATED)
+#   # notice that we do not call `add_subdirectory`, we simply fetch and then
+#   # use the subdirectory sources directly.
+#   FetchContent_Populate(sqlite3)
+# endif()
+
+add_subdirectory(SQLite)
 
 #===== Fetch spdlog as archive ====================#
 FetchContent_Declare(

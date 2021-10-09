@@ -2,15 +2,13 @@
 #include "StateMachine.h"
 #include "CommandParser.h"
 
-#include <iostream>
-
 int main([[maybe_unused]] int argc, [[maybe_unused]] char const *argv[])
 {
     try
     {
         StateMachine tStates;
         CommandParser tParser;
-        while(1)
+        while (1)
         {
             tStates.Apply(tParser.read());
         }
