@@ -1,3 +1,4 @@
+# ------------------ Googletest ------------------
 include(FetchContent)
 
 FetchContent_Declare(
@@ -10,7 +11,7 @@ set(BUILD_GTEST ON CACHE BOOL "" FORCE)
 
 FetchContent_MakeAvailable(googletest)
 
-#===== SQLite3 ====================#
+# ------------------ SQLite3 ------------------
 # FetchContent_Declare(sqlite3 URL "https://www.sqlite.org/2021/sqlite-amalgamation-3360000.zip")
 # if (NOT sqlite3_POPULATED)
 #   # notice that we do not call `add_subdirectory`, we simply fetch and then
@@ -20,7 +21,7 @@ FetchContent_MakeAvailable(googletest)
 
 add_subdirectory(SQLite)
 
-#===== Fetch spdlog as archive ====================#
+# ------------------ Fetch spdlog as archive ------------------
 FetchContent_Declare(
     spdlog
     URL       "https://github.com/gabime/spdlog/archive/refs/tags/v1.9.2.zip"
@@ -33,3 +34,17 @@ if(NOT spdlog_POPULATED)
     set(SPDLOG_BUILD_TESTS    OFF)
     add_subdirectory(${spdlog_SOURCE_DIR} ${spdlog_BINARY_DIR})
 endif()
+
+# ------------------ wxWidgets ------------------
+set(wxBUILD_SHARED OFF CACHE BOOL "Build wx libraries as shared libs")
+set(wxBUILD_PRECOMP OFF CACHE BOOL "Use precompiled headers")
+set(wxBUILD_MONOLITHIC OFF CACHE BOOL "Build a single library")
+set(wxUSE_STL ON CACHE BOOL "use C++ STL classes")
+
+FetchContent_Declare(
+    wxWidgets
+    GIT_REPOSITORY https://github.com/wxWidgets/wxWidgets.git
+    GIT_TAG v3.1.5
+)
+
+FetchContent_MakeAvailable(wxWidgets)

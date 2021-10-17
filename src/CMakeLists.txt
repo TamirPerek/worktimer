@@ -4,7 +4,10 @@ add_executable(${This} ${TARGET_SRC})
 
 target_link_libraries(${This}
                      sqlite3
-                     spdlog   
+                     spdlog  
+                     wxbase
+                     wxcore
+                     wxnet
 )
 add_custom_command(
         TARGET ${This} POST_BUILD

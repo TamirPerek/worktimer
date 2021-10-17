@@ -1,22 +1,24 @@
-#include "Exception.h"
-#include "StateMachine.h"
-#include "CommandParser.h"
+#include <wx/wx.h>
+#include <wx/wxprec.h>
 
-int main([[maybe_unused]] int argc, [[maybe_unused]] char const *argv[])
+#include "Dialogs/MainWindow.h"
+
+#include <iostream>
+#include <string>
+
+class MyApp : public wxApp
 {
-    try
-    {
-        StateMachine tStates;
-        CommandParser tParser;
-        while (1)
-        {
-            tStates.Apply(tParser.read());
-        }
-        return EXIT_SUCCESS;
-    }
-    catch (const std::exception &e)
-    {
-        Exception::handle();
-        return EXIT_FAILURE;
-    }
+public:
+    virtual bool OnInit();
+};
+
+wxIMPLEMENT_APP(MyApp);
+bool MyApp::OnInit()
+{
+    auto frame = new Dialogs::MainWindow(nullptr);
+#if defined(__MINGW32__) || defined(WIN32)
+    frame->SetIcon(wxICON(aaaa));
+#endif
+    frame->Show(true);
+    return true;
 }
