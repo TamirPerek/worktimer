@@ -16,9 +16,9 @@ wxIMPLEMENT_APP(MyApp);
 bool MyApp::OnInit()
 {
     auto frame = new Dialogs::MainWindow(nullptr);
-#if defined(__MINGW32__) || defined(WIN32)
-    frame->SetIcon(wxICON(aaaa));
-#endif
+//#if defined(__MINGW32__) || defined(WIN32)
+//    frame->SetIcon(wxICON(aaaa));
+//#endif
     frame->Show(true);
     return true;
 }
