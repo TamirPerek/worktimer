@@ -11,10 +11,12 @@ extern "C"
 #include <filesystem>
 #include "spdlog/fmt/fmt.h"
 
-bool Database::execute(const std::string_view &xSQLCommand, int (*xCallback)(void *, int, char **, char **), void *xAddInfo) noexcept
+constexpr static std::string_view gTableName{"worklog"};
+
+bool Database::execute(const std::string_view &xSQLCommand, int64_t &xLastInsertedRowIDint, int (*xCallback)(void *, int, char **, char **), void *xAddInfo) noexcept
 {
     sqlite3 *tDB = nullptr;
-    
+
     try
     {
         const auto gTestDBPath = std::filesystem::current_path() / StaticData::pathToDB;
@@ -26,7 +28,9 @@ bool Database::execute(const std::string_view &xSQLCommand, int (*xCallback)(voi
             THROWDB("Can not open Database: {}", rc);
 
         if (const auto rc = sqlite3_exec(tDB, xSQLCommand.data(), xCallback, xAddInfo, nullptr); rc != SQLITE_OK)
-            THROWDB("Can't execute Database querry: {}", rc);
+            THROWDB("Can't execute Database querry: {}; {}", rc, xSQLCommand);
+
+        xLastInsertedRowIDint = sqlite3_last_insert_rowid(tDB);
 
         if (const auto rc = sqlite3_close(tDB); rc != SQLITE_OK)
             THROWDB("Can't close database: {}", rc);
@@ -42,17 +46,20 @@ bool Database::execute(const std::string_view &xSQLCommand, int (*xCallback)(voi
     }
 };
 
-bool Database::write(const LogData &xDTO) noexcept
+bool Database::update(const LogData &xDTO) noexcept
 {
     try
     {
-        const auto tSQLStatement = fmt::format("INSERT INTO worklog (desc, start, end, duration) VALUES('{}', {}, {}, {});",
+        const auto tSQLStatement = fmt::format("UPDATE {} SET desc = '{}', start = {}, end = {}, duration = {} WHERE id = {};",
+                                               gTableName,
                                                xDTO.description,
                                                static_cast<int>(std::chrono::duration_cast<std::chrono::seconds>(xDTO.start.time_since_epoch()).count()),
                                                static_cast<int>(std::chrono::duration_cast<std::chrono::seconds>(xDTO.end.time_since_epoch()).count()),
-                                               xDTO.duration);
+                                               xDTO.duration,
+                                               xDTO.id);
 
-        return execute(tSQLStatement);
+        int64_t tRowID;
+        return execute(tSQLStatement, tRowID);
     }
     catch (...)
     {
@@ -61,13 +68,37 @@ bool Database::write(const LogData &xDTO) noexcept
     }
 }
 
+int Database::insert(const LogData &xDTO) noexcept
+{
+    try
+    {
+        const auto tSQLStatement = fmt::format("INSERT INTO {} (desc, start, end, duration) VALUES('{}', {}, {}, {});",
+                                               gTableName,
+                                               xDTO.description,
+                                               static_cast<int>(std::chrono::duration_cast<std::chrono::seconds>(xDTO.start.time_since_epoch()).count()),
+                                               static_cast<int>(std::chrono::duration_cast<std::chrono::seconds>(xDTO.end.time_since_epoch()).count()),
+                                               xDTO.duration);
+
+        int64_t tID = 0;
+        if (!execute(tSQLStatement, tID))
+            THROWDB("Unable to insert data into database", 0);
+
+        return static_cast<int>(tID);
+    }
+    catch (...)
+    {
+        Exception::handle();
+        return -1;
+    }
+}
+
 bool Database::read(int (*xCallback)(void *, int, char **, char **), void *xAddInfo) noexcept
 {
     try
     {
-        constexpr static std::string_view tSQLStatement{"SELECT * FROM worklog"};
-
-        return execute(tSQLStatement, xCallback, xAddInfo);
+        const auto tSQLStatement = fmt::format("SELECT * FROM {}", gTableName);
+        int64_t tRowID;
+        return execute(tSQLStatement, tRowID, xCallback, xAddInfo);
     }
     catch (...)
     {
