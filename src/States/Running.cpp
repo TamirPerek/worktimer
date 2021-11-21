@@ -33,10 +33,11 @@ namespace State
             tDTO.start = mStart;
             tDTO.end = std::chrono::system_clock::now();
             tDTO.duration = static_cast<int>(std::chrono::duration_cast<std::chrono::seconds>(tDTO.end - mStart).count());
+            tDTO.id = databaseID;
 
             xStateMachine.SetSate(std::make_unique<Start>());
 
-            if (!Database::write(tDTO))
+            if (!Database::update(tDTO))
                 THROWSTATE("Can't write data to db: {}", tDTO.description);
 
             return true;
@@ -51,5 +52,11 @@ namespace State
     void Running::StartTimer() noexcept
     {
         mStart = std::chrono::system_clock::now();
+    }
+
+    Running &Running::setDatabaseID(const int &xIn) noexcept
+    {
+        databaseID = xIn;
+        return *this;
     }
 } // namespace State

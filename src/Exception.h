@@ -32,6 +32,8 @@ namespace Exception
     };
 }
 
-#define THROWDB(n, ...) throw Exception::DatabaseException(fmt::format(n, __VA_ARGS__));
-#define THROWSTATE(n, ...) throw Exception::StateException(fmt::format(n, __VA_ARGS__));
-#define THROWDUMP(n, ...) throw Exception::DumpException(fmt::format(n, __VA_ARGS__));
+constexpr static std::string_view gExceptionText{"{}:{} -> {}"};
+
+#define THROWDB(n, ...) throw Exception::DatabaseException(fmt::format(gExceptionText, __FILE__, __LINE__, fmt::format(n, __VA_ARGS__)));
+#define THROWSTATE(n, ...) throw Exception::StateException(fmt::format(gExceptionText, __FILE__, __LINE__, fmt::format(n, __VA_ARGS__)));
+#define THROWDUMP(n, ...) throw Exception::DumpException(fmt::format(gExceptionText, __FILE__, __LINE__, fmt::format(n, __VA_ARGS__)));

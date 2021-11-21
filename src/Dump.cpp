@@ -11,14 +11,10 @@ void Dump::DumpDatabase(const std::filesystem::path &xPath) noexcept
 {
     try
     {
-        if (!std::filesystem::exists(xPath) && !std::filesystem::create_directories(xPath))
+        if (!std::filesystem::exists(xPath.parent_path()) && !std::filesystem::create_directories(xPath.parent_path()))
             THROWDUMP("Can't create directories {}", xPath.string());
 
-        if (std::error_code er; !std::filesystem::exists(xPath, er))
-            THROWDUMP("file does not exist: {}, {}", xPath.string(), er.message());
-
-        std::ofstream tOutpoutStream;
-        tOutpoutStream.open(xPath);
+        std::ofstream tOutpoutStream{xPath};
 
         if (!tOutpoutStream.is_open())
             THROWDUMP("Can't open file: {}", xPath.string());

@@ -5,8 +5,11 @@
 #include "../Command.h"
 #include "../Exception.h"
 #include "../StateMachine.h"
+#include "../Database.h"
+#include "../LogDataDTO.h"
 
 #include <iostream>
+#include <chrono>
 
 namespace State
 {
@@ -17,7 +20,18 @@ namespace State
             if (xIn.GetType() != CommandType::Start)
                 THROWSTATE("Wrong CommandType, expected {} command", "Start");
 
-            xStateMachine.SetSate(std::make_unique<Running>(xIn.GetAddInfos()));
+            LogData tDTO;
+            tDTO.description = xIn.GetAddInfos();
+            tDTO.start = std::chrono::system_clock::now();
+            tDTO.end = std::chrono::system_clock::now();
+            tDTO.duration = 0;
+
+            if (tDTO.id = Database::insert(tDTO); tDTO.id <= 0)
+                THROWSTATE("Can't write data to db: {}", tDTO.description);
+
+            auto tNextState = std::make_unique<Running>(xIn.GetAddInfos());
+            tNextState->setDatabaseID(tDTO.id);
+            xStateMachine.SetSate(std::move(tNextState));
 
             return true;
         }
