@@ -32,6 +32,6 @@ namespace Exception
     };
 }
 
-#define THROWDB(n, a...) throw Exception::DatabaseException(fmt::format(n, a));
-#define THROWSTATE(n, a...) throw Exception::StateException(fmt::format(n, a));
-#define THROWDUMP(n, a...) throw Exception::DumpException(fmt::format(n, a));
+#define THROWDB(n, ...) throw Exception::DatabaseException(fmt::format(n, __VA_ARGS__));
+#define THROWSTATE(n, ...) throw Exception::StateException(fmt::format(n, __VA_ARGS__));
+#define THROWDUMP(n, ...) throw Exception::DumpException(fmt::format(n, __VA_ARGS__));
