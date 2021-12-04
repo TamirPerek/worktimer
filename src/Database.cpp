@@ -19,7 +19,7 @@ bool Database::execute(const std::string_view &xSQLCommand, int64_t &xLastInsert
 
     try
     {
-        const auto gTestDBPath = std::filesystem::current_path() / StaticData::pathToDB;
+        const auto gTestDBPath = StaticData::pathToResource / StaticData::pathToDB;
 
         if (std::error_code er; !std::filesystem::exists(gTestDBPath, er))
             THROWDB("file does not exist: {}, {}", gTestDBPath.string(), er.message());
