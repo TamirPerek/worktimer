@@ -30,6 +30,12 @@ namespace Exception
     public:
         explicit DumpException(const std::string &xIn) : std::runtime_error{xIn} {};
     };
+
+    class UIException : public std::runtime_error
+    {
+    public:
+        explicit UIException(const std::string &xIn) : std::runtime_error{xIn} {};
+    };
 }
 
 constexpr static std::string_view gExceptionText{"{}:{} -> {}"};
@@ -39,3 +45,4 @@ constexpr static std::string_view gExceptionText{"{}:{} -> {}"};
 #define THROWDB(n, ...) throw Exception::DatabaseException(fmt::format(gExceptionText, __FILENAME__, __LINE__, fmt::format(n, __VA_ARGS__)));
 #define THROWSTATE(n, ...) throw Exception::StateException(fmt::format(gExceptionText, __FILENAME__, __LINE__, fmt::format(n, __VA_ARGS__)));
 #define THROWDUMP(n, ...) throw Exception::DumpException(fmt::format(gExceptionText, __FILENAME__, __LINE__, fmt::format(n, __VA_ARGS__)));
+#define THROWUIERROR(n, ...) throw Exception::UIException(fmt::format(gExceptionText, __FILENAME__, __LINE__, fmt::format(n, __VA_ARGS__)));

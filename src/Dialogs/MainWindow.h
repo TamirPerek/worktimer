@@ -16,12 +16,13 @@ namespace Dialogs
 		StateMachine m_StateMachine;
 		std::string m_StatusText;
 
-		std::unique_ptr<DetailList> m_DetailListDialog;
+		DetailList *m_DetailListDialog;
 
 		void OnStart(wxCommandEvent &event) final;
 		void OnStop(wxCommandEvent &event) final;
 		void OnDumpToCSV(wxCommandEvent &event) final;
 		void OnShowDetailList(wxCommandEvent &event) final;
+		void OnAbout(wxCommandEvent &event) final;
 
 		void MySetStatusText() noexcept;
 

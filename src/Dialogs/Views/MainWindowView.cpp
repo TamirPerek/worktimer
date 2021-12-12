@@ -80,6 +80,7 @@ bool MainWindow::Create(wxWindow *parent, wxWindowID id, const wxString &title, 
     m_StatusBar = this->CreateStatusBar(1, wxSTB_SIZEGRIP, wxID_ANY);
     m_menubar1 = new wxMenuBar(0);
     m_menu1 = new wxMenu();
+    m_menu1->Append(wxID_ABOUT);
     wxMenuItem *m_menuItemDump;
     m_menuItemDump = new wxMenuItem(m_menu1, wxID_ANY, wxString(wxT("Dump to csv")), wxEmptyString, wxITEM_NORMAL);
     m_menu1->Append(m_menuItemDump);
@@ -99,6 +100,7 @@ bool MainWindow::Create(wxWindow *parent, wxWindowID id, const wxString &title, 
     m_BtStop->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(MainWindow::OnStop), NULL, this);
     m_menu1->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainWindow::OnDumpToCSV), this, m_menuItemDump->GetId());
     m_menu1->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainWindow::OnShowDetailList), this, m_menuItemDetail->GetId());
+    m_menu1->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainWindow::OnAbout), this, wxID_ABOUT);
 
     return true;
 }

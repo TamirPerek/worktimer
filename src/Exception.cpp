@@ -33,6 +33,11 @@ namespace Exception
             Logger::getInstance().getLogger()->error("DatabaseException: {}", e.what());
             Logger::getInstance().getLogger()->flush();
         }
+        catch (const UIException &e)
+        {
+            Logger::getInstance().getLogger()->error("UIException: {}", e.what());
+            Logger::getInstance().getLogger()->flush();
+        }
         catch (const std::exception &e)
         {
             Logger::getInstance().getLogger()->error(e.what());

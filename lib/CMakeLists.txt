@@ -47,4 +47,12 @@ FetchContent_Declare(
     GIT_TAG v3.1.5
 )
 
-FetchContent_MakeAvailable(wxWidgets)
+# ------------------ vdkSignals ------------------
+FetchContent_Declare(
+  signals
+  GIT_REPOSITORY https://github.com/TamirPerek/signals.git
+)
+set(SIGNALS_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(SIGNALS_BUILD_DEMO OFF CACHE BOOL "" FORCE)
+
+FetchContent_MakeAvailable(wxWidgets signals)

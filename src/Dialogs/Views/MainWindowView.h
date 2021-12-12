@@ -26,6 +26,7 @@
 #include <wx/statusbr.h>
 #include <wx/menu.h>
 #include <wx/frame.h>
+#include <wx/msgdlg.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -52,6 +53,7 @@ namespace Dialogs::Views
         virtual void OnStop(wxCommandEvent &event) { event.Skip(); }
         virtual void OnDumpToCSV(wxCommandEvent &event) { event.Skip(); }
         virtual void OnShowDetailList(wxCommandEvent &event) { event.Skip(); }
+        virtual void OnAbout(wxCommandEvent &event) { event.Skip(); }
 
     public:
         MainWindow();
