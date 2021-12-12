@@ -2,6 +2,7 @@
 #include "MainWindow.h"
 
 #include "../Command.h"
+#include "../StaticData.h"
 #include "DetailList.h"
 #include "spdlog/fmt/fmt.h"
 
@@ -11,15 +12,15 @@ namespace Dialogs
 	MainWindow::MainWindow()
 	{
 		this->Create(nullptr);
-
-		SetStatusText("Welcome to WorkTime!");
+		SetStatusText(StaticData::pathToResource.string());
+		// SetStatusText("Welcome to WorkTime!");
 	}
 
 	MainWindow::MainWindow(wxWindow *parent)
 	{
 		this->Create(parent);
-
-		SetStatusText("Welcome to WorkTime!");
+		SetStatusText(StaticData::pathToResource.string());
+		// SetStatusText("Welcome to WorkTime!");
 	}
 
 	MainWindow::~MainWindow() = default;
@@ -56,9 +57,7 @@ namespace Dialogs
 
 	void MainWindow::OnShowDetailList(wxCommandEvent &event)
 	{
-		std::cout << "DetailList\n";
-
-		m_DetailListDialog = std::make_unique<DetailList>(this);
+		m_DetailListDialog = new DetailList(this);//std::make_unique<DetailList>(this);
 		m_DetailListDialog->Show();
 	}
 }

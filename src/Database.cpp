@@ -13,6 +13,10 @@ extern "C"
 
 constexpr static std::string_view gTableName{"worklog"};
 
+
+static vdk::signal<void()> gDatabaseEvent;
+
+
 bool Database::execute(const std::string_view &xSQLCommand, int64_t &xLastInsertedRowIDint, int (*xCallback)(void *, int, char **, char **), void *xAddInfo) noexcept
 {
     sqlite3 *tDB = nullptr;
@@ -59,7 +63,12 @@ bool Database::update(const LogData &xDTO) noexcept
                                                xDTO.id);
 
         int64_t tRowID;
-        return execute(tSQLStatement, tRowID);
+        if(!execute(tSQLStatement, tRowID))
+            THROWDB("Unable to update data into database", 0);
+
+        getDatabaseEvent().emit();
+
+        return true;
     }
     catch (...)
     {
@@ -82,6 +91,8 @@ int Database::insert(const LogData &xDTO) noexcept
         int64_t tID = 0;
         if (!execute(tSQLStatement, tID))
             THROWDB("Unable to insert data into database", 0);
+
+        getDatabaseEvent().emit();
 
         return static_cast<int>(tID);
     }
@@ -106,3 +117,8 @@ bool Database::read(int (*xCallback)(void *, int, char **, char **), void *xAddI
         return false;
     }
 }
+
+vdk::signal<void ()> &Database::getDatabaseEvent() noexcept { 
+    return gDatabaseEvent;
+}
+

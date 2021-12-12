@@ -28,11 +28,11 @@ void Dump::DumpDatabase(const std::filesystem::path &xPath) noexcept
     }
 }
 
-int Dump::DumpCallback(void *xOutpoutStream, int xCount, char **xData, [[maybe_unused]] char **xColumns)
+int Dump::DumpCallback(void *xOutputStream, int xCount, char **xData, [[maybe_unused]] char **xColumns)
 {
     try
     {
-        if (!xOutpoutStream)
+        if (!xOutputStream)
             THROWDUMP("Path is empty. {}", "");
 
         std::vector<std::string> tData;
@@ -41,9 +41,9 @@ int Dump::DumpCallback(void *xOutpoutStream, int xCount, char **xData, [[maybe_u
             tData.push_back(xData[i]);
         }
 
-        const auto tOutpoutStream = static_cast<std::ofstream *>(xOutpoutStream);
+        const auto tOutputStream = static_cast<std::ofstream *>(xOutputStream);
 
-        *tOutpoutStream << fmt::format("{}\n", fmt::join(tData, ";"));
+        *tOutputStream << fmt::format("{}\n", fmt::join(tData, ";"));
 
         return EXIT_SUCCESS;
     }

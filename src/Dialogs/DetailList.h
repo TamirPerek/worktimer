@@ -2,15 +2,23 @@
 
 #include "Views/DetailListView.h"
 
+#include <signals.h>
+
+#include <memory>
+
 namespace Dialogs
 {
-    class DetailList : public Views::DetailList
+    class DetailList : public Views::DetailListView, public vdk::context
     {
-    private:
-        /* data */
     public:
         DetailList();
         explicit DetailList(wxWindow *parent);
         ~DetailList();
+
+    private:
+        struct Impl;
+        std::unique_ptr<Impl> m;
+
+        void refresh() noexcept;
     };
 } // namespace Dialogs
