@@ -12,15 +12,13 @@ namespace Dialogs
 	MainWindow::MainWindow()
 	{
 		this->Create(nullptr);
-		SetStatusText(StaticData::pathToResource.string());
-		// SetStatusText("Welcome to WorkTime!");
+		SetStatusText("Welcome to WorkTime!");
 	}
 
 	MainWindow::MainWindow(wxWindow *parent)
 	{
 		this->Create(parent);
-		SetStatusText(StaticData::pathToResource.string());
-		// SetStatusText("Welcome to WorkTime!");
+		SetStatusText("Welcome to WorkTime!");
 	}
 
 	MainWindow::~MainWindow() = default;
