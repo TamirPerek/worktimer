@@ -33,7 +33,7 @@ if(APPLE)
     set_source_files_properties(
     ${DB_FILE}
     PROPERTIES
-        MACOSX_PACKAGE_LOCATION MacOS/db
+        MACOSX_PACKAGE_LOCATION Resources/db
     )
 
     add_executable(${This} MACOSX_BUNDLE ${myApp_ICON} ${TARGET_SRC} ${DB_FILE})  
