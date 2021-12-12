@@ -3,8 +3,11 @@
 
 #include "../Command.h"
 #include "../StaticData.h"
+#include "../Dump.h"
 #include "DetailList.h"
 #include "spdlog/fmt/fmt.h"
+
+#include <wx/filedlg.h>
 
 namespace Dialogs
 {
@@ -49,13 +52,26 @@ namespace Dialogs
 
 	void MainWindow::OnDumpToCSV(wxCommandEvent &event)
 	{
-		m_StateMachine.Apply(Command{CommandType::Dump});
+		wxFileDialog tDumpFileLocationDialog(this, "Save DumpFile", "", "WorkTimerDump", "CSV files (*.csv)|*.csv", wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+
+		if (tDumpFileLocationDialog.ShowModal() == wxID_CANCEL)
+			return; 
+
+		std::filesystem::path tOutputPath{tDumpFileLocationDialog.GetPath()};
+		Dump::DumpDatabase(tOutputPath);
+
 		SetStatusText("Dumped database to csv.");
 	}
 
 	void MainWindow::OnShowDetailList(wxCommandEvent &event)
 	{
-		m_DetailListDialog = new DetailList(this);//std::make_unique<DetailList>(this);
+		m_DetailListDialog = new DetailList(this);
 		m_DetailListDialog->Show();
+	}
+
+	void MainWindow::OnAbout(wxCommandEvent &event)
+	{
+		wxMessageBox("This is the Worktimer App\nThe WorkTimer app is useful to track the time that you have needed for certain tasks or projects.",
+					 "About Worktimer App", wxOK | wxICON_INFORMATION, this);
 	}
 }
