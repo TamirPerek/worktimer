@@ -26,7 +26,7 @@ namespace Dialogs
 
 	MainWindow::~MainWindow() = default;
 
-	void MainWindow::OnStart(wxCommandEvent &event)
+	void MainWindow::OnStart(wxCommandEvent &)
 	{
 		const auto tCategory = m_WorkCategory->GetLineText(0);
 		m_StateMachine.Apply(Command{CommandType::Start, tCategory.ToStdString()});
@@ -34,7 +34,7 @@ namespace Dialogs
 		m_BtStop->Enable();
 		MySetStatusText();
 	}
-	void MainWindow::OnStop(wxCommandEvent &event)
+	void MainWindow::OnStop(wxCommandEvent &)
 	{
 		m_StateMachine.Apply(Command{CommandType::Stop});
 		m_BtStop->Disable();
@@ -50,26 +50,26 @@ namespace Dialogs
 		SetStatusText(m_StatusText.c_str());
 	}
 
-	void MainWindow::OnDumpToCSV(wxCommandEvent &event)
+	void MainWindow::OnDumpToCSV(wxCommandEvent &)
 	{
 		wxFileDialog tDumpFileLocationDialog(this, "Save DumpFile", "", "WorkTimerDump", "CSV files (*.csv)|*.csv", wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
 
 		if (tDumpFileLocationDialog.ShowModal() == wxID_CANCEL)
 			return; 
 
-		std::filesystem::path tOutputPath{tDumpFileLocationDialog.GetPath()};
+		std::filesystem::path tOutputPath{static_cast<std::string>(tDumpFileLocationDialog.GetPath())};
 		Dump::DumpDatabase(tOutputPath);
 
 		SetStatusText("Dumped database to csv.");
 	}
 
-	void MainWindow::OnShowDetailList(wxCommandEvent &event)
+	void MainWindow::OnShowDetailList(wxCommandEvent &evet)
 	{
 		m_DetailListDialog = new DetailList(this);
 		m_DetailListDialog->Show();
 	}
 
-	void MainWindow::OnAbout(wxCommandEvent &event)
+	void MainWindow::OnAbout(wxCommandEvent &)
 	{
 		wxMessageBox("This is the Worktimer App\nThe WorkTimer app is useful to track the time that you have needed for certain tasks or projects.",
 					 "About Worktimer App", wxOK | wxICON_INFORMATION, this);
