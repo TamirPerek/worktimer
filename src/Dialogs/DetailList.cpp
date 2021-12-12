@@ -58,7 +58,7 @@ namespace Dialogs
 
         wxListItem tItem;
         tItem.SetId(tCount);
-        tItem.SetText("Desc");
+        //tItem.SetText("Desc");
         tListView->InsertItem(tItem);
 
         for (int i = 0; i < xCount; i++)
