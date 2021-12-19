@@ -8,6 +8,7 @@
 #include "spdlog/fmt/fmt.h"
 
 #include <wx/filedlg.h>
+#include <wx/aboutdlg.h>
 
 namespace Dialogs
 {
@@ -71,7 +72,12 @@ namespace Dialogs
 
 	void MainWindow::OnAbout(wxCommandEvent &)
 	{
-		wxMessageBox("This is the Worktimer App\nThe WorkTimer app is useful to track the time that you have needed for certain tasks or projects.",
-					 "About Worktimer App", wxOK | wxICON_INFORMATION, this);
+		wxAboutDialogInfo aboutInfo;
+		aboutInfo.SetName("WorkTimer");
+		aboutInfo.SetVersion("0.0.1");
+		aboutInfo.SetDescription(_("just a small program to log time done for projects."));
+		aboutInfo.SetCopyright("(C) 2021");
+		aboutInfo.AddDeveloper("Nils Brödner");
+		wxAboutBox(aboutInfo, this);
 	}
 }
