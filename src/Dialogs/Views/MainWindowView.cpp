@@ -100,7 +100,7 @@ bool MainWindow::Create(wxWindow *parent, wxWindowID id, const wxString &title, 
     m_BtStop->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(MainWindow::OnStop), NULL, this);
     m_menu1->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainWindow::OnDumpToCSV), this, m_menuItemDump->GetId());
     m_menu1->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainWindow::OnShowDetailList), this, m_menuItemDetail->GetId());
-    m_menu1->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainWindow::OnAbout), this, wxID_ABOUT);
+    Bind(wxEVT_MENU, &MainWindow::OnAbout, this, wxID_ABOUT);
 
     return true;
 }
