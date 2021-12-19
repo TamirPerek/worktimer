@@ -31,8 +31,16 @@ DetailListView::DetailListView( wxWindow* parent, wxWindowID id, const wxString&
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 
-	wxBoxSizer* tMainSizer;
-	tMainSizer = new wxBoxSizer( wxHORIZONTAL );
+	auto tMainSizer = new wxBoxSizer( wxVERTICAL );
+
+	auto tPickerSizer = new wxBoxSizer( wxHORIZONTAL );
+
+	m_DatePickerFrom = new  wxDatePickerCtrl(this, wxID_ANY);
+	m_DatePickerTo = new  wxDatePickerCtrl(this, wxID_ANY);
+	tPickerSizer->Add(m_DatePickerFrom, 0, wxALL, 2);
+	tPickerSizer->Add(m_DatePickerTo, 0, wxALL, 2);
+
+	tMainSizer->Add(tPickerSizer, 0, wxALL, 5);
 
 	m_ListView = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SORT_ASCENDING );
 	tMainSizer->Add( m_ListView, 1, wxEXPAND, 5 );
@@ -42,6 +50,10 @@ DetailListView::DetailListView( wxWindow* parent, wxWindowID id, const wxString&
 	this->Layout();
 
 	this->Centre( wxBOTH );
+
+	// Connect
+	m_DatePickerFrom->Connect(wxEVT_DATE_CHANGED, wxCommandEventHandler(DetailListView::DatePickerFromEvent), NULL, this);
+	m_DatePickerTo->Connect(wxEVT_DATE_CHANGED, wxCommandEventHandler(DetailListView::DatePickerToEvent), NULL, this);
 }
 
 DetailListView::~DetailListView()

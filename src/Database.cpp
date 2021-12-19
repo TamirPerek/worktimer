@@ -11,11 +11,11 @@ extern "C"
 #include <filesystem>
 #include "spdlog/fmt/fmt.h"
 
+#include <iostream>
+
 constexpr static std::string_view gTableName{"worklog"};
 
-
 static vdk::signal<void()> gDatabaseEvent;
-
 
 bool Database::execute(const std::string_view &xSQLCommand, int64_t &xLastInsertedRowIDint, int (*xCallback)(void *, int, char **, char **), void *xAddInfo) noexcept
 {
@@ -63,7 +63,7 @@ bool Database::update(const LogData &xDTO) noexcept
                                                xDTO.id);
 
         int64_t tRowID;
-        if(!execute(tSQLStatement, tRowID))
+        if (!execute(tSQLStatement, tRowID))
             THROWDB("Unable to update data into database", 0);
 
         getDatabaseEvent().emit();
@@ -103,11 +103,19 @@ int Database::insert(const LogData &xDTO) noexcept
     }
 }
 
-bool Database::read(int (*xCallback)(void *, int, char **, char **), void *xAddInfo) noexcept
+bool Database::read(int (*xCallback)(void *, int, char **, char **), void *xAddInfo, const time_t &xFrom, const time_t &xTo) noexcept
 {
     try
     {
-        const auto tSQLStatement = fmt::format("SELECT * FROM {}", gTableName);
+        auto tSQLStatement = fmt::format("SELECT * FROM {}", gTableName);
+
+        if (xFrom > 0 && xTo > 0)
+        {
+            tSQLStatement = fmt::format("{} WHERE start >= {} AND end <= {}", tSQLStatement, xFrom, xTo);
+        }
+
+        std::cout << tSQLStatement << std::endl;
+
         int64_t tRowID;
         return execute(tSQLStatement, tRowID, xCallback, xAddInfo);
     }
@@ -118,7 +126,7 @@ bool Database::read(int (*xCallback)(void *, int, char **, char **), void *xAddI
     }
 }
 
-vdk::signal<void ()> &Database::getDatabaseEvent() noexcept { 
+vdk::signal<void()> &Database::getDatabaseEvent() noexcept
+{
     return gDatabaseEvent;
 }
-

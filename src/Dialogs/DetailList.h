@@ -20,5 +20,8 @@ namespace Dialogs
         std::unique_ptr<Impl> m;
 
         void refresh() noexcept;
+
+        void DatePickerFromEvent(wxCommandEvent& event) final;
+        void DatePickerToEvent(wxCommandEvent& event) final;
     };
 } // namespace Dialogs
