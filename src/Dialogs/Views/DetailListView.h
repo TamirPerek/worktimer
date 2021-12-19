@@ -18,6 +18,9 @@
 #include <wx/string.h>
 #include <wx/sizer.h>
 #include <wx/frame.h>
+#include <wx/datectrl.h>
+#include <wx/datetime.h>
+#include <wx/dateevt.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -32,6 +35,11 @@ namespace Dialogs::Views
 
 		protected:
 			wxListCtrl* m_ListView;
+			wxDatePickerCtrl * m_DatePickerFrom;
+			wxDatePickerCtrl *m_DatePickerTo;
+
+			virtual void DatePickerFromEvent(wxCommandEvent& event) { event.Skip(); }
+			virtual void DatePickerToEvent(wxCommandEvent& event) { event.Skip(); }
 
 		public:
 
