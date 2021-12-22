@@ -49,7 +49,15 @@ bool MainWindow::Create(wxWindow *parent, wxWindowID id, const wxString &title, 
     wxBoxSizer *bSizer1;
     bSizer1 = new wxBoxSizer(wxVERTICAL);
 
-    m_Label1 = new wxStaticText(this, wxID_ANY, wxT("Work category:"), wxDefaultPosition, wxDefaultSize, 0);
+    auto tLabelWorkCategory = new wxStaticText(this, wxID_ANY, wxT("Category:"), wxDefaultPosition, wxDefaultSize, 0);
+    tLabelWorkCategory->Wrap(-1);
+    bSizer1->Add(tLabelWorkCategory, 0, wxALL, 5);
+
+    m_ComboboxCategories = new wxComboBox(this, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN | wxCB_READONLY);
+    m_ComboboxCategories->SetSelection(-1);
+    bSizer1->Add(m_ComboboxCategories, 0, wxALL, 5);
+
+    m_Label1 = new wxStaticText(this, wxID_ANY, wxT("Work Text:"), wxDefaultPosition, wxDefaultSize, 0);
     m_Label1->Wrap(-1);
     bSizer1->Add(m_Label1, 0, wxALL, 5);
 
@@ -77,10 +85,11 @@ bool MainWindow::Create(wxWindow *parent, wxWindowID id, const wxString &title, 
 
     this->SetSizer(bSizer1);
     this->Layout();
-    m_StatusBar = this->CreateStatusBar(1, wxSTB_SIZEGRIP, wxID_ANY);
+    m_StatusBar = this->CreateStatusBar(1, wxSTB_DEFAULT_STYLE, wxID_ANY);
     m_menubar1 = new wxMenuBar(0);
     m_menu1 = new wxMenu();
     m_menu1->Append(wxID_ABOUT);
+    m_menu1->Append(wxID_PREFERENCES);
     wxMenuItem *m_menuItemDump;
     m_menuItemDump = new wxMenuItem(m_menu1, wxID_ANY, wxString(wxT("Dump to csv")), wxEmptyString, wxITEM_NORMAL);
     m_menu1->Append(m_menuItemDump);
@@ -101,6 +110,7 @@ bool MainWindow::Create(wxWindow *parent, wxWindowID id, const wxString &title, 
     m_menu1->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainWindow::OnDumpToCSV), this, m_menuItemDump->GetId());
     m_menu1->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainWindow::OnShowDetailList), this, m_menuItemDetail->GetId());
     Bind(wxEVT_MENU, &MainWindow::OnAbout, this, wxID_ABOUT);
+    Bind(wxEVT_MENU, &MainWindow::OnShowOptions, this, wxID_PREFERENCES);
 
     return true;
 }

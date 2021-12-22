@@ -21,7 +21,7 @@ namespace Dialogs
 
         void refresh() noexcept;
 
-        void DatePickerFromEvent(wxCommandEvent& event) final;
-        void DatePickerToEvent(wxCommandEvent& event) final;
+        void DatePickerFromEvent(wxDateEvent &event) final;
+        void DatePickerToEvent(wxDateEvent &event) final;
     };
 } // namespace Dialogs

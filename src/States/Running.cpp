@@ -17,8 +17,8 @@ namespace State
     {
     }
 
-    Running::Running(const std::string_view &xIn)
-        : mStart{std::chrono::system_clock::now()}, mAddInfos{xIn}
+    Running::Running(const std::string_view &xIn, const int &xCategory)
+        : mStart{std::chrono::system_clock::now()}, mAddInfos{xIn}, mCategory{xCategory}
     {
     }
     bool Running::Apply(StateMachine &xStateMachine, Command &&xIn) noexcept
@@ -34,6 +34,7 @@ namespace State
             tDTO.end = std::chrono::system_clock::now();
             tDTO.duration = static_cast<int>(std::chrono::duration_cast<std::chrono::seconds>(tDTO.end - mStart).count());
             tDTO.id = databaseID;
+            tDTO.category = mCategory;
 
             xStateMachine.SetSate(std::make_unique<Start>());
 

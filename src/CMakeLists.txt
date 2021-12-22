@@ -23,20 +23,26 @@ if(APPLE)
     set(MACOSX_BUNDLE_ICON_FILE worktimer.icns)
 
     # And this part tells CMake where to find and install the file itself
-    set(myApp_ICON ${CMAKE_CURRENT_SOURCE_DIR}/../images/worktimer.icns)
+    set(myApp_ICON ${CMAKE_SOURCE_DIR}/images/worktimer.icns)
     set_source_files_properties(${myApp_ICON} PROPERTIES
         MACOSX_PACKAGE_LOCATION "Resources")
 
     # Copy DB File
     set(DB_FILE ${CMAKE_SOURCE_DIR}/db/worktimer.db)
-    # target_sources(target PRIVATE ${DB_FILE})
     set_source_files_properties(
     ${DB_FILE}
     PROPERTIES
         MACOSX_PACKAGE_LOCATION Resources/db
     )
+    
+    file(GLOB_RECURSE Images "${CMAKE_SOURCE_DIR}/images/*.png" "${CMAKE_SOURCE_DIR}/images/*.bmp")
+    set_source_files_properties(
+        ${Images}
+        PROPERTIES
+        MACOSX_PACKAGE_LOCATION Resources/images/
+    )
 
-    add_executable(${This} MACOSX_BUNDLE ${myApp_ICON} ${TARGET_SRC} ${DB_FILE})  
+    add_executable(${This} MACOSX_BUNDLE ${myApp_ICON} ${TARGET_SRC} ${DB_FILE} ${Images})  
 
     set_target_properties(${This} PROPERTIES
         BUNDLE True

@@ -25,11 +25,12 @@ namespace State
             tDTO.start = std::chrono::system_clock::now();
             tDTO.end = std::chrono::system_clock::now();
             tDTO.duration = 0;
+            tDTO.category = xIn.GetCategory();
 
             if (tDTO.id = Database::insert(tDTO); tDTO.id <= 0)
                 THROWSTATE("Can't write data to db: {}", tDTO.description);
 
-            auto tNextState = std::make_unique<Running>(xIn.GetAddInfos());
+            auto tNextState = std::make_unique<Running>(xIn.GetAddInfos(), xIn.GetCategory());
             tNextState->setDatabaseID(tDTO.id);
             xStateMachine.SetSate(std::move(tNextState));
 

@@ -13,7 +13,8 @@ StateMachine::StateMachine(std::unique_ptr<State::State_Interface> &&xIn) noexce
 
 StateMachine::~StateMachine() noexcept
 {
-    Apply(Command{CommandType::Stop});
+    if (mState->Name() == "Running")
+        Apply(Command{CommandType::Stop});
 }
 
 StateMachine &StateMachine::SetSate(std::unique_ptr<State::State_Interface> &&xIn) noexcept
