@@ -19,6 +19,10 @@
 #include <wx/string.h>
 #include <wx/sizer.h>
 #include <wx/listctrl.h>
+#include <wx/button.h>
+#include <wx/bitmap.h>
+#include <wx/image.h>
+#include <wx/icon.h>
 #include <wx/frame.h>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -35,10 +39,12 @@ namespace Dialogs::Views
 		wxDatePickerCtrl *m_DatePickerFrom;
 		wxDatePickerCtrl *m_DatePickerTo;
 		wxListCtrl *m_ListView;
+		wxButton *m_buttonReuseData;
 
 		// Virtual event handlers, override them in your derived class
-		virtual void DatePickerFromEvent(wxDateEvent &event) { event.Skip(); }
-		virtual void DatePickerToEvent(wxDateEvent &event) { event.Skip(); }
+		virtual void DatePickerFromEvent(wxDateEvent &event) = 0;
+		virtual void DatePickerToEvent(wxDateEvent &event) = 0;
+		virtual void OnButtonClickedReuseData(wxCommandEvent &event) = 0;
 
 	public:
 		DetailListView(wxWindow *parent, wxWindowID id = wxID_ANY, const wxString &title = wxT("Detail list"), const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxSize(700, 300), long style = wxDEFAULT_FRAME_STYLE | wxTAB_TRAVERSAL);

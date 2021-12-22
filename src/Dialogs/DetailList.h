@@ -15,6 +15,8 @@ namespace Dialogs
         explicit DetailList(wxWindow *parent);
         ~DetailList();
 
+        vdk::signal<void(std::string, std::string)> &getReuseDataSignal() const noexcept;
+
     private:
         struct Impl;
         std::unique_ptr<Impl> m;
@@ -23,5 +25,6 @@ namespace Dialogs
 
         void DatePickerFromEvent(wxDateEvent &event) final;
         void DatePickerToEvent(wxDateEvent &event) final;
+        void OnButtonClickedReuseData(wxCommandEvent &event) final;
     };
 } // namespace Dialogs

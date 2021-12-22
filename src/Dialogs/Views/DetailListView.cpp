@@ -46,8 +46,11 @@ DetailListView::DetailListView(wxWindow *parent, wxWindowID id, const wxString &
 
 	tMainSizer->Add(tPickerSizer, 0, wxALL, 5);
 
-	m_ListView = new wxListCtrl(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT | wxLC_SORT_ASCENDING);
+	m_ListView = new wxListCtrl(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT | wxLC_SORT_ASCENDING | wxLC_SINGLE_SEL);
 	tMainSizer->Add(m_ListView, 1, wxEXPAND, 5);
+
+	m_buttonReuseData = new wxButton(this, wxID_ANY, wxT("Reuse work item"), wxDefaultPosition, wxDefaultSize, 0);
+	tMainSizer->Add(m_buttonReuseData, 0, wxALL, 5);
 
 	this->SetSizer(tMainSizer);
 	this->Layout();
@@ -57,6 +60,7 @@ DetailListView::DetailListView(wxWindow *parent, wxWindowID id, const wxString &
 	// Connect Events
 	m_DatePickerFrom->Connect(wxEVT_DATE_CHANGED, wxDateEventHandler(DetailListView::DatePickerFromEvent), NULL, this);
 	m_DatePickerTo->Connect(wxEVT_DATE_CHANGED, wxDateEventHandler(DetailListView::DatePickerToEvent), NULL, this);
+	m_buttonReuseData->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(DetailListView::OnButtonClickedReuseData), NULL, this);
 }
 
 DetailListView::~DetailListView()
@@ -64,4 +68,5 @@ DetailListView::~DetailListView()
 	// Disconnect Events
 	m_DatePickerFrom->Disconnect(wxEVT_DATE_CHANGED, wxDateEventHandler(DetailListView::DatePickerFromEvent), NULL, this);
 	m_DatePickerTo->Disconnect(wxEVT_DATE_CHANGED, wxDateEventHandler(DetailListView::DatePickerToEvent), NULL, this);
+	m_buttonReuseData->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(DetailListView::OnButtonClickedReuseData), NULL, this);
 }
