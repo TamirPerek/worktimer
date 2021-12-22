@@ -27,6 +27,7 @@
 #include <wx/menu.h>
 #include <wx/frame.h>
 #include <wx/msgdlg.h>
+#include <wx/combobox.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -47,18 +48,20 @@ namespace Dialogs::Views
         wxStatusBar *m_StatusBar;
         wxMenuBar *m_menubar1;
         wxMenu *m_menu1;
+        wxComboBox *m_ComboboxCategories;
 
         // Virtual event handlers, override them in your derived class
         virtual void OnStart(wxCommandEvent &event) { event.Skip(); }
         virtual void OnStop(wxCommandEvent &event) { event.Skip(); }
         virtual void OnDumpToCSV(wxCommandEvent &event) { event.Skip(); }
         virtual void OnShowDetailList(wxCommandEvent &event) { event.Skip(); }
+        virtual void OnShowOptions(wxCommandEvent &event) { event.Skip(); }
         virtual void OnAbout(wxCommandEvent &event) { event.Skip(); }
 
     public:
         MainWindow();
-        MainWindow(wxWindow *parent, wxWindowID id = wxID_ANY, const wxString &title = wxT("WorkTimer"), const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxSize(216, 189), long style = wxCAPTION | wxCLOSE_BOX | wxMINIMIZE_BOX | wxTAB_TRAVERSAL, const wxString &name = wxT("MainWIndow"));
-        bool Create(wxWindow *parent, wxWindowID id = wxID_ANY, const wxString &title = wxT("WorkTimer"), const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxSize(216, 189), long style = wxCAPTION | wxCLOSE_BOX | wxMINIMIZE_BOX | wxTAB_TRAVERSAL, const wxString &name = wxT("MainWIndow"));
+        MainWindow(wxWindow *parent, wxWindowID id = wxID_ANY, const wxString &title = wxT("WorkTimer"), const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxSize(216, 250), long style = wxCAPTION | wxCLOSE_BOX | wxMINIMIZE_BOX | wxTAB_TRAVERSAL, const wxString &name = wxT("MainWIndow"));
+        bool Create(wxWindow *parent, wxWindowID id = wxID_ANY, const wxString &title = wxT("WorkTimer"), const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxSize(216, 250), long style = wxCAPTION | wxCLOSE_BOX | wxMINIMIZE_BOX | wxTAB_TRAVERSAL, const wxString &name = wxT("MainWIndow"));
 
         ~MainWindow();
     };

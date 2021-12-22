@@ -13,49 +13,55 @@
 class wxFBContextSensitiveHelpSetter
 {
 public:
-wxFBContextSensitiveHelpSetter()
-{
-wxSimpleHelpProvider* help = new wxSimpleHelpProvider();
-wxHelpProvider* old = wxHelpProvider::Set( help );
-if (old != 0){
-delete old;
-}
-}
+	wxFBContextSensitiveHelpSetter()
+	{
+		wxSimpleHelpProvider *help = new wxSimpleHelpProvider();
+		wxHelpProvider *old = wxHelpProvider::Set(help);
+		if (old != 0)
+		{
+			delete old;
+		}
+	}
 };
 
 static wxFBContextSensitiveHelpSetter s_wxFBSetTheHelpProvider;
 ///////////////////////////////////////////////////////////////////////////
 using namespace Dialogs::Views;
 
-DetailListView::DetailListView( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
+DetailListView::DetailListView(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &pos, const wxSize &size, long style) : wxFrame(parent, id, title, pos, size, style)
 {
-	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	this->SetSizeHints(wxDefaultSize, wxDefaultSize);
 
-	auto tMainSizer = new wxBoxSizer( wxVERTICAL );
+	wxBoxSizer *tMainSizer;
+	tMainSizer = new wxBoxSizer(wxVERTICAL);
 
-	auto tPickerSizer = new wxBoxSizer( wxHORIZONTAL );
+	wxBoxSizer *tPickerSizer;
+	tPickerSizer = new wxBoxSizer(wxHORIZONTAL);
 
-	m_DatePickerFrom = new  wxDatePickerCtrl(this, wxID_ANY);
-	m_DatePickerTo = new  wxDatePickerCtrl(this, wxID_ANY);
-	tPickerSizer->Add(m_DatePickerFrom, 0, wxALL, 2);
-	tPickerSizer->Add(m_DatePickerTo, 0, wxALL, 2);
+	m_DatePickerFrom = new wxDatePickerCtrl(this, wxID_ANY, wxDefaultDateTime, wxDefaultPosition, wxDefaultSize, wxDP_DEFAULT);
+	tPickerSizer->Add(m_DatePickerFrom, 0, wxALL, 5);
+
+	m_DatePickerTo = new wxDatePickerCtrl(this, wxID_ANY, wxDefaultDateTime, wxDefaultPosition, wxDefaultSize, wxDP_DEFAULT);
+	tPickerSizer->Add(m_DatePickerTo, 0, wxALL, 5);
 
 	tMainSizer->Add(tPickerSizer, 0, wxALL, 5);
 
-	m_ListView = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SORT_ASCENDING );
-	tMainSizer->Add( m_ListView, 1, wxEXPAND, 5 );
+	m_ListView = new wxListCtrl(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT | wxLC_SORT_ASCENDING);
+	tMainSizer->Add(m_ListView, 1, wxEXPAND, 5);
 
-
-	this->SetSizer( tMainSizer );
+	this->SetSizer(tMainSizer);
 	this->Layout();
 
-	this->Centre( wxBOTH );
+	this->Centre(wxBOTH);
 
-	// Connect
-	m_DatePickerFrom->Connect(wxEVT_DATE_CHANGED, wxCommandEventHandler(DetailListView::DatePickerFromEvent), NULL, this);
-	m_DatePickerTo->Connect(wxEVT_DATE_CHANGED, wxCommandEventHandler(DetailListView::DatePickerToEvent), NULL, this);
+	// Connect Events
+	m_DatePickerFrom->Connect(wxEVT_DATE_CHANGED, wxDateEventHandler(DetailListView::DatePickerFromEvent), NULL, this);
+	m_DatePickerTo->Connect(wxEVT_DATE_CHANGED, wxDateEventHandler(DetailListView::DatePickerToEvent), NULL, this);
 }
 
 DetailListView::~DetailListView()
 {
+	// Disconnect Events
+	m_DatePickerFrom->Disconnect(wxEVT_DATE_CHANGED, wxDateEventHandler(DetailListView::DatePickerFromEvent), NULL, this);
+	m_DatePickerTo->Disconnect(wxEVT_DATE_CHANGED, wxDateEventHandler(DetailListView::DatePickerToEvent), NULL, this);
 }

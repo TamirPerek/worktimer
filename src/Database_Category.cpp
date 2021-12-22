@@ -1,4 +1,4 @@
-#include "Database.h"
+#include "Database_Category.h"
 
 #include "LogDataDTO.h"
 #include "StaticData.h"
@@ -13,11 +13,11 @@ extern "C"
 
 #include <iostream>
 
-constexpr static std::string_view gTableName{"worklog"};
+constexpr static std::string_view gTableName{"categories"};
 
 static vdk::signal<void()> gDatabaseEvent;
 
-bool Database::execute(const std::string_view &xSQLCommand, int64_t &xLastInsertedRowIDint, int (*xCallback)(void *, int, char **, char **), void *xAddInfo) noexcept
+bool Database_Category::execute(const std::string_view &xSQLCommand, int64_t &xLastInsertedRowIDint, int (*xCallback)(void *, int, char **, char **), void *xAddInfo) noexcept
 {
     sqlite3 *tDB = nullptr;
 
@@ -50,17 +50,13 @@ bool Database::execute(const std::string_view &xSQLCommand, int64_t &xLastInsert
     }
 };
 
-bool Database::update(const LogData &xDTO) noexcept
+bool Database_Category::update(const Database_Category_DTO &xDTO) noexcept
 {
     try
     {
-        const auto tSQLStatement = fmt::format("UPDATE {} SET desc = '{}', start = {}, end = {}, duration = {}, category = {} WHERE id = {};",
+        const auto tSQLStatement = fmt::format("UPDATE {} SET text = '{}' WHERE id = {};",
                                                gTableName,
-                                               xDTO.description,
-                                               static_cast<int>(std::chrono::duration_cast<std::chrono::seconds>(xDTO.start.time_since_epoch()).count()),
-                                               static_cast<int>(std::chrono::duration_cast<std::chrono::seconds>(xDTO.end.time_since_epoch()).count()),
-                                               xDTO.duration,
-                                               xDTO.category,
+                                               xDTO.text,
                                                xDTO.id);
 
         int64_t tRowID;
@@ -78,17 +74,13 @@ bool Database::update(const LogData &xDTO) noexcept
     }
 }
 
-int Database::insert(const LogData &xDTO) noexcept
+int Database_Category::insert(const Database_Category_DTO &xDTO) noexcept
 {
     try
     {
-        const auto tSQLStatement = fmt::format("INSERT INTO {} (desc, start, end, duration, category) VALUES('{}', {}, {}, {}, {});",
+        const auto tSQLStatement = fmt::format("INSERT INTO {} (text) VALUES('{}');",
                                                gTableName,
-                                               xDTO.description,
-                                               static_cast<int>(std::chrono::duration_cast<std::chrono::seconds>(xDTO.start.time_since_epoch()).count()),
-                                               static_cast<int>(std::chrono::duration_cast<std::chrono::seconds>(xDTO.end.time_since_epoch()).count()),
-                                               xDTO.duration,
-                                               xDTO.category);
+                                               xDTO.text);
 
         int64_t tID = 0;
         if (!execute(tSQLStatement, tID))
@@ -105,16 +97,11 @@ int Database::insert(const LogData &xDTO) noexcept
     }
 }
 
-bool Database::read(int (*xCallback)(void *, int, char **, char **), void *xAddInfo, const time_t &xFrom, const time_t &xTo) noexcept
+bool Database_Category::read(int (*xCallback)(void *, int, char **, char **), void *xAddInfo) noexcept
 {
     try
     {
-        auto tSQLStatement = fmt::format("SELECT {}.id, desc, start, end, duration, categories.id AS category_id, categories.text FROM {} JOIN categories ON {}.category = categories.id", gTableName, gTableName, gTableName);
-
-        if (xFrom > 0 && xTo > 0)
-        {
-            tSQLStatement = fmt::format("{} WHERE start >= {} AND end <= {} ORDER BY {}.id DESC", tSQLStatement, xFrom, xTo, gTableName);
-        }
+        auto tSQLStatement = fmt::format("SELECT * FROM {}", gTableName);
 
         int64_t tRowID;
         return execute(tSQLStatement, tRowID, xCallback, xAddInfo);
@@ -126,7 +113,29 @@ bool Database::read(int (*xCallback)(void *, int, char **, char **), void *xAddI
     }
 }
 
-vdk::signal<void()> &Database::getDatabaseEvent() noexcept
+bool Database_Category::remove(const Database_Category_DTO &xDTO) noexcept
+{
+    try
+    {
+        auto tSQLStatement = fmt::format("DELETE FROM {} WHERE id = {};",
+                                         gTableName,
+                                         xDTO.id);
+        int64_t tRowID;
+        if (!execute(tSQLStatement, tRowID))
+            THROWDB("Unable to delete data in database, ID: <{}>", xDTO.id);
+
+        getDatabaseEvent().emit();
+
+        return true;
+    }
+    catch (...)
+    {
+        Exception::handle();
+        return false;
+    }
+}
+
+vdk::signal<void()> &Database_Category::getDatabaseEvent() noexcept
 {
     return gDatabaseEvent;
 }

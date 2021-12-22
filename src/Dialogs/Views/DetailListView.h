@@ -10,17 +10,16 @@
 #include <wx/artprov.h>
 #include <wx/xrc/xmlres.h>
 #include <wx/cshelp.h>
-#include <wx/listctrl.h>
+#include <wx/datectrl.h>
+#include <wx/dateevt.h>
 #include <wx/gdicmn.h>
 #include <wx/font.h>
 #include <wx/colour.h>
 #include <wx/settings.h>
 #include <wx/string.h>
 #include <wx/sizer.h>
+#include <wx/listctrl.h>
 #include <wx/frame.h>
-#include <wx/datectrl.h>
-#include <wx/datetime.h>
-#include <wx/dateevt.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -31,23 +30,20 @@ namespace Dialogs::Views
 	///////////////////////////////////////////////////////////////////////////////
 	class DetailListView : public wxFrame
 	{
-		private:
+	private:
+	protected:
+		wxDatePickerCtrl *m_DatePickerFrom;
+		wxDatePickerCtrl *m_DatePickerTo;
+		wxListCtrl *m_ListView;
 
-		protected:
-			wxListCtrl* m_ListView;
-			wxDatePickerCtrl * m_DatePickerFrom;
-			wxDatePickerCtrl *m_DatePickerTo;
+		// Virtual event handlers, override them in your derived class
+		virtual void DatePickerFromEvent(wxDateEvent &event) { event.Skip(); }
+		virtual void DatePickerToEvent(wxDateEvent &event) { event.Skip(); }
 
-			virtual void DatePickerFromEvent(wxCommandEvent& event) { event.Skip(); }
-			virtual void DatePickerToEvent(wxCommandEvent& event) { event.Skip(); }
+	public:
+		DetailListView(wxWindow *parent, wxWindowID id = wxID_ANY, const wxString &title = wxT("Detail list"), const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxSize(700, 300), long style = wxDEFAULT_FRAME_STYLE | wxTAB_TRAVERSAL);
 
-		public:
-
-			DetailListView( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Detail list"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 400,239 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
-
-			~DetailListView();
-
+		~DetailListView();
 	};
 
 } // namespace Dialogs::Views
-

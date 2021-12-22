@@ -2,6 +2,7 @@
 
 #include "../Database.h"
 #include "../Exception.h"
+#include "../StaticData.h"
 #include <signals.h>
 
 #include <utility>
@@ -9,8 +10,11 @@
 #include <sstream>
 #include <iomanip>
 #include <time.h>
+#include <filesystem>
 
 #include <wx/dateevt.h>
+#include <wx/bmpbuttn.h>
+#include <wx/bitmap.h>
 
 namespace Dialogs
 {
@@ -60,10 +64,16 @@ namespace Dialogs
     {
         try
         {
+            xListView.AppendColumn("Category");
             xListView.AppendColumn("Details");
             xListView.AppendColumn("Start");
             xListView.AppendColumn("End");
             xListView.AppendColumn("Duration (min)");
+            xListView.SetColumnWidth(0, 100);
+            xListView.SetColumnWidth(1, 100);
+            xListView.SetColumnWidth(2, 200);
+            xListView.SetColumnWidth(3, 200);
+            xListView.SetColumnWidth(4, 100);
 
             fillListWithData(xListView, xDatePickerFrom.GetValue().GetTicks(), xDatePickerTo.GetValue().GetTicks());
         }
@@ -84,23 +94,29 @@ namespace Dialogs
 
         for (int i = 0; i < xCount; i++)
         {
-            if (std::string{xColumns[i]} == std::string{"desc"})
+            const auto tColumnName{std::string{xColumns[i]}};
+            
+            if (tColumnName == std::string("text"))
             {
                 tListView->SetItem(tCount, 0, xData[i]);
             }
-            else if (std::string{xColumns[i]} == std::string{"start"})
+            else if (tColumnName == std::string{"desc"})
             {
-                const auto tTimePoint = std::stol(xData[i]);
-                tListView->SetItem(tCount, 1, TimepointToString(tTimePoint));
+                tListView->SetItem(tCount, 1, xData[i]);
             }
-            else if (std::string{xColumns[i]} == std::string{"end"})
+            else if (tColumnName == std::string{"start"})
             {
                 const auto tTimePoint = std::stol(xData[i]);
                 tListView->SetItem(tCount, 2, TimepointToString(tTimePoint));
             }
-            else if (std::string{xColumns[i]} == std::string{"duration"})
+            else if (tColumnName == std::string{"end"})
             {
-                tListView->SetItem(tCount, 3, std::to_string(std::stoi(xData[i]) / 60));
+                const auto tTimePoint = std::stol(xData[i]);
+                tListView->SetItem(tCount, 3, TimepointToString(tTimePoint));
+            }
+            else if (tColumnName == std::string{"duration"})
+            {
+                tListView->SetItem(tCount, 4, std::to_string(std::stoi(xData[i]) / 60));
             }
         }
         tCount++;
@@ -138,12 +154,12 @@ namespace Dialogs
         }
     }
 
-    void DetailList::DatePickerFromEvent(wxCommandEvent &event)
+    void DetailList::DatePickerFromEvent(wxDateEvent &event)
     {
         refresh();
     }
 
-    void DetailList::DatePickerToEvent(wxCommandEvent &event)
+    void DetailList::DatePickerToEvent(wxDateEvent &event)
     {
         refresh();
     }

@@ -9,9 +9,15 @@
 
 #include "spdlog/fmt/fmt.h"
 
+#include <signals.h>
+
+#include <string>
+
 namespace Exception
 {
     void handle() noexcept;
+
+    vdk::signal<void(std::string)> &getExceptionSignal();
 
     class DatabaseException : public std::runtime_error
     {
