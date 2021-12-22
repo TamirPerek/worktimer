@@ -50,8 +50,8 @@ namespace Dialogs
 		const auto tText = m_WorkCategory->GetLineText(0);
 		int tCategoryID = 0;
 
-		if(const auto tMapResult = m_DataForComboBox.find(m_ComboboxCategories->GetValue().ToStdString());
-		tMapResult != m_DataForComboBox.end())
+		if (const auto tMapResult = m_DataForComboBox.find(m_ComboboxCategories->GetValue().ToStdString());
+			tMapResult != m_DataForComboBox.end())
 			tCategoryID = tMapResult->second;
 
 		m_StateMachine.Apply(Command{CommandType::Start, tText.ToStdString(), tCategoryID});
@@ -91,6 +91,8 @@ namespace Dialogs
 	void MainWindow::OnShowDetailList(wxCommandEvent &)
 	{
 		m_DetailListDialog = new DetailList(this);
+		m_DetailListDialog->getReuseDataSignal().connect(this, &MainWindow::SetReusedDataFromListView);
+
 		m_DetailListDialog->Show();
 	}
 
@@ -124,8 +126,8 @@ namespace Dialogs
 			m_ComboboxCategories->Clear();
 			m_DataForComboBox.clear();
 
-				if (!Database_Category::read(&MainWindow::DatabaseCallback, &tData))
-					THROWUIERROR("Can't read data from database. Details: {}", "none");
+			if (!Database_Category::read(&MainWindow::DatabaseCallback, &tData))
+				THROWUIERROR("Can't read data from database. Details: {}", "none");
 
 			if (m_ComboboxCategories->GetCount() > 0)
 				m_ComboboxCategories->SetSelection(0);
@@ -139,6 +141,23 @@ namespace Dialogs
 	void MainWindow::SetStatusTextCallback(const std::string &xIn) noexcept
 	{
 		SetStatusText(xIn);
+	}
+
+	void MainWindow::SetReusedDataFromListView(const std::string &xCategory, const std::string &xText) noexcept
+	{
+		if (m_StateMachine.GetState()->Name() != State::Start{}.Name())
+		{
+			wxMessageBox("The reuse of data is only allowed if no time recording is active.");
+			return;
+		}
+
+		m_WorkCategory->SetValue(xText);
+
+		const auto tComboBoxResult = m_ComboboxCategories->FindString(xCategory);
+		if (tComboBoxResult == wxNOT_FOUND)
+			return;
+
+		m_ComboboxCategories->Select(tComboBoxResult);
 	}
 
 	int MainWindow::DatabaseCallback(void *xListView, int xCount, char **xData, char **xColumns)

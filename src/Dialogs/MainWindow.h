@@ -37,6 +37,7 @@ namespace Dialogs
 
 		void InitCategoriesComboBox() noexcept;
 		void SetStatusTextCallback(const std::string &) noexcept;
+		void SetReusedDataFromListView(const std::string &xCategory, const std::string &xText) noexcept;
 
 		static int DatabaseCallback(void *xListView, int xCount, char **xData, char **xColumns);
 
