@@ -24,6 +24,7 @@
 #include <wx/image.h>
 #include <wx/icon.h>
 #include <wx/frame.h>
+#include <wx/panel.h>
 
 ///////////////////////////////////////////////////////////////////////////
 

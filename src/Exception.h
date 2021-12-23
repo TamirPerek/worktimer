@@ -48,7 +48,7 @@ constexpr static std::string_view gExceptionText{"{}:{} -> {}"};
 
 #define __FILENAME__ (std::strrchr(__FILE__, '/') ? std::strrchr(__FILE__, '/') + 1 : __FILE__)
 
-#define THROWDB(n, ...) throw Exception::DatabaseException(fmt::format(gExceptionText, __FILENAME__, __LINE__, fmt::format(n, __VA_ARGS__)));
-#define THROWSTATE(n, ...) throw Exception::StateException(fmt::format(gExceptionText, __FILENAME__, __LINE__, fmt::format(n, __VA_ARGS__)));
-#define THROWDUMP(n, ...) throw Exception::DumpException(fmt::format(gExceptionText, __FILENAME__, __LINE__, fmt::format(n, __VA_ARGS__)));
-#define THROWUIERROR(n, ...) throw Exception::UIException(fmt::format(gExceptionText, __FILENAME__, __LINE__, fmt::format(n, __VA_ARGS__)));
+#define THROWDB(n, ...) throw Exception::DatabaseException(fmt::format(gExceptionText, __FILENAME__, __LINE__, fmt::format(n, __VA_ARGS__)))
+#define THROWSTATE(n, ...) throw Exception::StateException(fmt::format(gExceptionText, __FILENAME__, __LINE__, fmt::format(n, __VA_ARGS__)))
+#define THROWDUMP(n, ...) throw Exception::DumpException(fmt::format(gExceptionText, __FILENAME__, __LINE__, fmt::format(n, __VA_ARGS__)))
+#define THROWUIERROR(n, ...) throw Exception::UIException(fmt::format(gExceptionText, __FILENAME__, __LINE__, fmt::format(n, __VA_ARGS__)))

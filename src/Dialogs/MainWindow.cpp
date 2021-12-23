@@ -113,7 +113,7 @@ namespace Dialogs
 		aboutInfo.SetVersion("0.0.1");
 		aboutInfo.SetDescription(_("just a small program to log time done for projects."));
 		aboutInfo.SetCopyright("(C) 2021");
-		aboutInfo.AddDeveloper("Nils Brödner");
+		aboutInfo.AddDeveloper(wxT("Nils Brödner"));
 		wxAboutBox(aboutInfo, this);
 	}
 

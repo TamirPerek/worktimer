@@ -44,7 +44,7 @@ namespace Dialogs
             Exception::handle();
         }
     }
-    constexpr void PreferencesPanel_Category::InitListCtrl() const noexcept
+	 void PreferencesPanel_Category::InitListCtrl() const noexcept
     {
         m_listCtrlCategories->AppendColumn("Description");
         m_listCtrlCategories->SetColumnWidth(0, 200);

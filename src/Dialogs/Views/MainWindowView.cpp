@@ -46,45 +46,48 @@ bool MainWindow::Create(wxWindow *parent, wxWindowID id, const wxString &title, 
 
     this->SetSizeHints(wxDefaultSize, wxDefaultSize);
 
+	 auto mainPane = new wxPanel(this);
+
     wxBoxSizer *bSizer1;
     bSizer1 = new wxBoxSizer(wxVERTICAL);
 
-    auto tLabelWorkCategory = new wxStaticText(this, wxID_ANY, wxT("Category:"), wxDefaultPosition, wxDefaultSize, 0);
+    auto tLabelWorkCategory = new wxStaticText(mainPane, wxID_ANY, wxT("Category:"), wxDefaultPosition, wxDefaultSize, 0);
     tLabelWorkCategory->Wrap(-1);
     bSizer1->Add(tLabelWorkCategory, 0, wxALL, 5);
 
-    m_ComboboxCategories = new wxComboBox(this, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN | wxCB_READONLY);
+    m_ComboboxCategories = new wxComboBox(mainPane, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN | wxCB_READONLY);
     m_ComboboxCategories->SetSelection(-1);
     bSizer1->Add(m_ComboboxCategories, 0, wxALL, 5);
 
-    m_Label1 = new wxStaticText(this, wxID_ANY, wxT("Work Text:"), wxDefaultPosition, wxDefaultSize, 0);
+    m_Label1 = new wxStaticText(mainPane, wxID_ANY, wxT("Work Text:"), wxDefaultPosition, wxDefaultSize, 0);
     m_Label1->Wrap(-1);
     bSizer1->Add(m_Label1, 0, wxALL, 5);
 
-    m_WorkCategory = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
+    m_WorkCategory = new wxTextCtrl(mainPane, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
     m_WorkCategory->SetToolTip(wxT("Enter work category"));
     m_WorkCategory->SetHelpText(wxT("Daily"));
 
     bSizer1->Add(m_WorkCategory, 0, wxALL, 5);
 
-    m_staticline1 = new wxStaticLine(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL);
+    m_staticline1 = new wxStaticLine(mainPane, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL);
     bSizer1->Add(m_staticline1, 0, wxEXPAND | wxALL, 5);
 
     wxGridSizer *gSizer2;
     gSizer2 = new wxGridSizer(0, 2, 0, 0);
 
-    m_BtStart = new wxButton(this, wxID_ANY, wxT("Start"), wxDefaultPosition, wxDefaultSize, 0);
+    m_BtStart = new wxButton(mainPane, wxID_ANY, wxT("Start"), wxDefaultPosition, wxDefaultSize, 0);
     gSizer2->Add(m_BtStart, 0, wxALL, 5);
 
-    m_BtStop = new wxButton(this, wxID_ANY, wxT("Stop"), wxDefaultPosition, wxDefaultSize, 0);
+    m_BtStop = new wxButton(mainPane, wxID_ANY, wxT("Stop"), wxDefaultPosition, wxDefaultSize, 0);
     m_BtStop->Enable(false);
 
     gSizer2->Add(m_BtStop, 0, wxALL, 5);
 
-    bSizer1->Add(gSizer2, 1, wxEXPAND, 5);
+    bSizer1->Add(gSizer2, 0, wxALL, 5);
 
-    this->SetSizer(bSizer1);
-    this->Layout();
+	 mainPane->SetSizer(bSizer1);
+	 mainPane->Layout();
+
     m_StatusBar = this->CreateStatusBar(1, wxSTB_DEFAULT_STYLE, wxID_ANY);
     m_menubar1 = new wxMenuBar(0);
     m_menu1 = new wxMenu();

@@ -19,7 +19,7 @@ namespace Dialogs
 		void OnAddCategoryClicked(wxCommandEvent &event) final;
 		void OnDeleteCategoryClicked(wxCommandEvent &event) final;
 
-		constexpr void InitListCtrl() const noexcept;
+		void InitListCtrl() const noexcept;
 		void AddDataToListCrtl() noexcept(false);
 
 		static int DatabaseCallback(void *xListView, int xCount, char **xData, char **xColumns);

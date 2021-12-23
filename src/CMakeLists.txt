@@ -52,14 +52,38 @@ if(APPLE)
         MACOSX_BUNDLE_SHORT_VERSION_STRING "${VERSION}"
         MACOSX_PACKAGE_LOCATION MacOSX
      )
+
+    target_link_libraries(${This}
+        sqlite3
+        spdlog  
+        wxbase
+        wxcore
+        wxnet
+        signals
+    )
 elseif(MSVC)
-    add_executable(${This} WIN32 ${TARGET_SRC} resource.rc)
+    ENABLE_LANGUAGE(RC)
+
+    file(TO_CMAKE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/resource.rc RESOURCEFILE)
+
+    add_executable(${This} WIN32 ${TARGET_SRC} ${RESOURCEFILE})
+    # SET( WORKTIMER_LINKFLAGS ${CMAKE_CURRENT_BINARY_DIR}/resource.res )
+    # SET_TARGET_PROPERTIES( ${This} PROPERTIES LINK_FLAGS ${RESOURCEFILE} )
 
     add_custom_command(
             TARGET ${This} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy
                     ${CMAKE_SOURCE_DIR}/db/worktimer.db
                     ${CMAKE_CURRENT_BINARY_DIR}/db/worktimer.db)
+
+    target_link_libraries(${This}
+                    sqlite3
+                    spdlog  
+                    wxbase
+                    wxcore
+                    wxnet
+                    signals
+   )
 else()
     add_executable(${This} ${TARGET_SRC})
 
@@ -68,13 +92,14 @@ else()
             COMMAND ${CMAKE_COMMAND} -E copy
                     ${CMAKE_SOURCE_DIR}/db/worktimer.db
                     ${CMAKE_CURRENT_BINARY_DIR}/db/worktimer.db)
-endif()
 
-target_link_libraries(${This}
+    target_link_libraries(${This}
                      sqlite3
                      spdlog  
                      wxbase
                      wxcore
                      wxnet
                      signals
-)
+    )
+endif()
+
