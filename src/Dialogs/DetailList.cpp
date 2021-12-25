@@ -50,8 +50,8 @@ namespace Dialogs
     {
         m = std::make_unique<Impl>();
 
-        wxDateTime tTimeTo = wxDateTime::Now();
-        tTimeTo.SetMinute(59).SetHour(23);
+        auto tTimeTo = wxDateTime::Now();
+        tTimeTo.SetDay(tTimeTo.GetDay() + 1).SetMinute(0).SetHour(0);
         m_DatePickerTo->SetValue(tTimeTo);
         wxDateTime tTimeFrom(wxDateTime::Now().GetTicks() - gTwoWeeks);
         tTimeFrom.SetMinute(0).SetHour(0);
@@ -65,8 +65,8 @@ namespace Dialogs
     {
         m = std::make_unique<Impl>();
 
-        wxDateTime tTimeTo = wxDateTime::Now();
-        tTimeTo.SetMinute(59).SetHour(23);
+        auto tTimeTo = wxDateTime::Now();
+        tTimeTo.SetDay(tTimeTo.GetDay() + 1).SetMinute(0).SetHour(0);
         m_DatePickerTo->SetValue(tTimeTo);
         wxDateTime tTimeFrom(wxDateTime::Now().GetTicks() - gTwoWeeks);
         tTimeFrom.SetMinute(0).SetHour(0);
@@ -107,92 +107,73 @@ namespace Dialogs
 
     int DetailList::Impl::DumpCallback(void *xListView, int xCount, char **xData, char **xColumns)
     {
-		 try
-		 {
-			 if (!xListView || xCount <= 0 || !xData || !xColumns)
-				 THROWUIERROR("One ore more mandatory parameters are not fullfiled.");
+        try
+        {
+            if (!xListView || xCount <= 0 || !xData || !xColumns)
+                THROWUIERROR("One ore more mandatory parameters are not fullfiled. {}", "");
 
-			 auto tDTO = static_cast<DatabaseCallbackData *>(xListView);
+            auto tDTO = static_cast<DatabaseCallbackData *>(xListView);
 
-			 //wxListItem tItem;
-			 //tItem.SetId(tDTO->count);
-			 //tItem.SetText(xData[0]);
-			 //tDTO->listCtrl->InsertItem(tItem);
-			 //tDTO->listCtrl->InsertItem(tDTO->count, _("col1ItemText"));
-			 std::string tCategory;
-			 std::string tText;
+            wxListItem tItem;
+            tItem.SetId(tDTO->count);
+            // tItem.SetText(xData[0]);
+            tDTO->listCtrl->InsertItem(tItem);
+            // tDTO->listCtrl->InsertItem(tDTO->count, _("col1ItemText"));
+            std::string tCategory;
+            std::string tText;
 
-			 for (int i = 0; i < xCount; i++)
-			 {
-				 const auto tColumnName{ std::string{xColumns[i]} };
+            for (int i = 0; i < xCount; i++)
+            {
+                const auto tColumnName{std::string{xColumns[i]}};
 
-				 wxListItem tItem;
-				 tItem.SetMask(wxLIST_MASK_TEXT);				 
-				 tItem.SetId(tDTO->count);
+                wxListItem tItem;
+                tItem.SetMask(wxLIST_MASK_TEXT);
+                tItem.SetId(tDTO->count);
 
-				 if (tColumnName == std::string("text"))
-				 {
-					 tCategory = xData[i];					 
-					 tItem.SetColumn(0);
-					 tItem.SetText(tCategory);
+                if (tColumnName == std::string("text"))
+                {
+                    tCategory = xData[i];
+                    tDTO->listCtrl->SetItem(tDTO->count, 0, tCategory);
+                }
+                else if (tColumnName == std::string{"desc"})
+                {
+                    tText = xData[i];
+                    tDTO->listCtrl->SetItem(tDTO->count, 1, tText);
+                }
+                else if (tColumnName == std::string{"start"})
+                {
+                    const auto tTimePoint = TimepointToString(std::stol(xData[i]));
+                    tDTO->listCtrl->SetItem(tDTO->count, 2, tTimePoint);
+                }
+                else if (tColumnName == std::string{"end"})
+                {
+                    const auto tTimePoint = TimepointToString(std::stol(xData[i]));
+                    tDTO->listCtrl->SetItem(tDTO->count, 3, tTimePoint);
+                }
+                else if (tColumnName == std::string{"duration"})
+                {
+                    const auto tDuration = std::to_string(std::stoi(xData[i]) / 60);
+                    tDTO->listCtrl->SetItem(tDTO->count, 4, tDuration);
+                }
+            }
+            tDTO->listData->try_emplace(tDTO->count, UsefulDatabaseData{tCategory, tText});
+            tDTO->count++;
 
-					 tDTO->listCtrl->InsertItem(tItem);
-				 }
-				 else if (tColumnName == std::string{ "desc" })
-				 {
-					 tText = xData[i];
-					 tItem.SetColumn(1);
-					 tItem.SetText(tText);
-
-					 tDTO->listCtrl->InsertItem(tItem);
-				 }
-				 else if (tColumnName == std::string{ "start" })
-				 {
-					 const auto tTimePoint = TimepointToString(std::stol(xData[i]));
-					 tItem.SetColumn(2);
-					 tItem.SetText(tTimePoint);
-
-					 tDTO->listCtrl->InsertItem(tItem);
-					 //tDTO->listCtrl->SetItem(tDTO->count, 2, TimepointToString(tTimePoint));
-				 }
-				 else if (tColumnName == std::string{ "end" })
-				 {
-					 const auto tTimePoint = TimepointToString(std::stol(xData[i]));
-					 tItem.SetColumn(3);
-					 tItem.SetText(tTimePoint);
-
-					 tDTO->listCtrl->InsertItem(tItem);
-					 //tDTO->listCtrl->SetItem(tDTO->count, 3, TimepointToString(tTimePoint));
-				 }
-				 else if (tColumnName == std::string{ "duration" })
-				 {
-					 const auto tDuration = std::to_string(std::stoi(xData[i]) / 60);
-					 tItem.SetColumn(4);
-					 tItem.SetText(tDuration);
-
-					 tDTO->listCtrl->InsertItem(tItem);
-					 //tDTO->listCtrl->SetItem(tDTO->count, 4, std::to_string(std::stoi(xData[i]) / 60));
-				 }
-			 }
-			 tDTO->listData->try_emplace(tDTO->count, UsefulDatabaseData{ tCategory, tText });
-			 tDTO->count++;
-
-			 return EXIT_SUCCESS;
-		 }
-		 catch (...)
-		 {
-			 Exception::handle();
-			 return EXIT_FAILURE;
-		 }
+            return EXIT_SUCCESS;
+        }
+        catch (...)
+        {
+            Exception::handle();
+            return EXIT_FAILURE;
+        }
     }
 
     std::string DetailList::Impl::TimepointToString(const long &time_date_stamp) noexcept
     {
-        std::time_t temp = time_date_stamp;
-        std::tm *t = std::gmtime(&temp);
-        std::stringstream ss; // or if you're going to print, just input directly into the output stream
-        ss << std::put_time(t, "%Y-%m-%d %I:%M:%S %p");
-        return ss.str();
+        wxDateTime tTime;
+        tTime.Set(time_date_stamp);
+
+        return tTime.Format("%Y-%m-%d %T").ToStdString();
     }
 
     void DetailList::Impl::fillListWithData(wxListCtrl &xListView, const time_t &xFrom, const time_t &xTo) noexcept(false)
@@ -204,12 +185,16 @@ namespace Dialogs
 
         if (!Database::read(&DetailList::Impl::DumpCallback, &tData, xFrom, xTo))
             THROWUIERROR("Can't read data from database. Details: {}", "none");
+
+        xListView.Refresh();
     }
     void DetailList::refresh() noexcept
     {
         try
         {
-            m->fillListWithData(*m_ListView, m_DatePickerFrom->GetValue().GetTicks(), m_DatePickerTo->GetValue().GetTicks());
+            auto tEndDate = m_DatePickerTo->GetValue();
+            tEndDate.SetDay(tEndDate.GetDay() + 1);
+            m->fillListWithData(*m_ListView, m_DatePickerFrom->GetValue().GetTicks(), tEndDate.GetTicks());
         }
         catch (...)
         {

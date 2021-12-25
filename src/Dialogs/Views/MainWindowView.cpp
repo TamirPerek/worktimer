@@ -46,7 +46,7 @@ bool MainWindow::Create(wxWindow *parent, wxWindowID id, const wxString &title, 
 
     this->SetSizeHints(wxDefaultSize, wxDefaultSize);
 
-	 auto mainPane = new wxPanel(this);
+    auto mainPane = new wxPanel(this);
 
     wxBoxSizer *bSizer1;
     bSizer1 = new wxBoxSizer(wxVERTICAL);
@@ -85,8 +85,8 @@ bool MainWindow::Create(wxWindow *parent, wxWindowID id, const wxString &title, 
 
     bSizer1->Add(gSizer2, 0, wxALL, 5);
 
-	 mainPane->SetSizer(bSizer1);
-	 mainPane->Layout();
+    mainPane->SetSizer(bSizer1);
+    mainPane->Layout();
 
     m_StatusBar = this->CreateStatusBar(1, wxSTB_DEFAULT_STYLE, wxID_ANY);
     m_menubar1 = new wxMenuBar(0);

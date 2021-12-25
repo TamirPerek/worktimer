@@ -115,7 +115,7 @@ bool Database::read(int (*xCallback)(void *, int, char **, char **), void *xAddI
         {
             tSQLStatement = fmt::format("{} WHERE start >= {} AND end <= {} ORDER BY {}.id DESC", tSQLStatement, xFrom, xTo, gTableName);
         }
-
+        
         int64_t tRowID;
         return execute(tSQLStatement, tRowID, xCallback, xAddInfo);
     }

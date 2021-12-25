@@ -4,8 +4,9 @@
 #include "Database.h"
 
 #include <fstream>
-#include <string>
 #include <vector>
+
+#include <wx/datetime.h>
 
 void Dump::DumpDatabase(const std::filesystem::path &xPath) noexcept
 {
@@ -38,7 +39,14 @@ int Dump::DumpCallback(void *xOutputStream, int xCount, char **xData, [[maybe_un
         std::vector<std::string> tData;
         for (int i = 0; i < xCount; i++)
         {
-            tData.push_back(xData[i]);
+            const std::string tColumn = xColumns[i];
+            if (/*tColumn == "id" || */tColumn == "categories.id")
+                continue;
+
+            if (tColumn == "start" || tColumn == "end")
+                tData.push_back(TimeToString(std::stol(xData[i])));
+            else
+                tData.push_back(xData[i]);
         }
 
         const auto tOutputStream = static_cast<std::ofstream *>(xOutputStream);
@@ -52,4 +60,12 @@ int Dump::DumpCallback(void *xOutputStream, int xCount, char **xData, [[maybe_un
         Exception::handle();
         return EXIT_FAILURE;
     }
+}
+
+std::string Dump::TimeToString(const time_t &xIn) noexcept
+{
+    wxDateTime tTime;
+    tTime.Set(xIn);
+
+    return tTime.Format("%Y-%m-%d %T").ToStdString();
 }
