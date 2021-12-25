@@ -13,7 +13,7 @@ namespace Dialogs
 	{
 	public:
 		PreferencesPanel_Category();
-		PreferencesPanel_Category(wxWindow *xParent);
+		explicit PreferencesPanel_Category(wxWindow *xParent);
 
 	private:
 		void OnAddCategoryClicked(wxCommandEvent &event) final;
