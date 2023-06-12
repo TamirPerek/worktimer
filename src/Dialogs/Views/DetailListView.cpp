@@ -35,22 +35,42 @@ DetailListView::DetailListView(wxWindow *parent, wxWindowID id, const wxString &
 	wxBoxSizer *tMainSizer;
 	tMainSizer = new wxBoxSizer(wxVERTICAL);
 
+	wxPanel *tMainPanel;
+	tMainPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
+	wxBoxSizer *tPanelSizer;
+	tPanelSizer = new wxBoxSizer(wxVERTICAL);
+
 	wxBoxSizer *tPickerSizer;
 	tPickerSizer = new wxBoxSizer(wxHORIZONTAL);
 
-	m_DatePickerFrom = new wxDatePickerCtrl(this, wxID_ANY, wxDefaultDateTime, wxDefaultPosition, wxDefaultSize, wxDP_DEFAULT);
-	tPickerSizer->Add(m_DatePickerFrom, 0, wxALL, 5);
+	wxStaticText *tStaticTextStart;
+	tStaticTextStart = new wxStaticText(tMainPanel, wxID_ANY, wxT("Start:"), wxDefaultPosition, wxDefaultSize, 0);
+	tStaticTextStart->Wrap(-1);
+	tPickerSizer->Add(tStaticTextStart, 0, wxALIGN_CENTER_VERTICAL | wxLEFT, 5);
 
-	m_DatePickerTo = new wxDatePickerCtrl(this, wxID_ANY, wxDefaultDateTime, wxDefaultPosition, wxDefaultSize, wxDP_DEFAULT);
-	tPickerSizer->Add(m_DatePickerTo, 0, wxALL, 5);
+	m_DatePickerFrom = new wxDatePickerCtrl(tMainPanel, wxID_ANY, wxDefaultDateTime, wxDefaultPosition, wxDefaultSize, wxDP_DEFAULT);
+	tPickerSizer->Add(m_DatePickerFrom, 0, wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT, 5);
 
-	tMainSizer->Add(tPickerSizer, 0, wxALL, 5);
+	wxStaticText *tStaticTextEnd;
+	tStaticTextEnd = new wxStaticText(tMainPanel, wxID_ANY, wxT("End:"), wxDefaultPosition, wxDefaultSize, 0);
+	tStaticTextEnd->Wrap(-1);
+	tPickerSizer->Add(tStaticTextEnd, 0, wxALIGN_CENTER_VERTICAL | wxLEFT, 5);
 
-	m_ListView = new wxListCtrl(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT | wxLC_SORT_ASCENDING | wxLC_SINGLE_SEL);
-	tMainSizer->Add(m_ListView, 1, wxEXPAND, 5);
+	m_DatePickerTo = new wxDatePickerCtrl(tMainPanel, wxID_ANY, wxDefaultDateTime, wxDefaultPosition, wxDefaultSize, wxDP_DEFAULT);
+	tPickerSizer->Add(m_DatePickerTo, 0, wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT, 5);
 
-	m_buttonReuseData = new wxButton(this, wxID_ANY, wxT("Reuse work item"), wxDefaultPosition, wxDefaultSize, 0);
-	tMainSizer->Add(m_buttonReuseData, 0, wxALL, 5);
+	tPanelSizer->Add(tPickerSizer, 0, wxALL, 5);
+
+	m_ListView = new wxListCtrl(tMainPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_SORT_ASCENDING);
+	tPanelSizer->Add(m_ListView, 1, wxEXPAND | wxALL, 5);
+
+	m_buttonReuseData = new wxButton(tMainPanel, wxID_ANY, wxT("Reuse work item"), wxDefaultPosition, wxDefaultSize, 0);
+	tPanelSizer->Add(m_buttonReuseData, 0, wxALL, 5);
+
+	tMainPanel->SetSizer(tPanelSizer);
+	tMainPanel->Layout();
+	tPanelSizer->Fit(tMainPanel);
+	tMainSizer->Add(tMainPanel, 1, wxEXPAND | wxALL, 0);
 
 	this->SetSizer(tMainSizer);
 	this->Layout();

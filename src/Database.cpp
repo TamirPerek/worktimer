@@ -109,13 +109,13 @@ bool Database::read(int (*xCallback)(void *, int, char **, char **), void *xAddI
 {
     try
     {
-        auto tSQLStatement = fmt::format("SELECT {}.id, desc, start, end, duration, categories.id AS category_id, categories.text FROM {} JOIN categories ON {}.category = categories.id", gTableName, gTableName, gTableName);
+        auto tSQLStatement = fmt::format("SELECT {}.id, categories.text, desc, start, end, duration, categories.id AS category_id FROM {} JOIN categories ON {}.category = categories.id", gTableName, gTableName, gTableName);
 
         if (xFrom > 0 && xTo > 0)
         {
             tSQLStatement = fmt::format("{} WHERE start >= {} AND end <= {} ORDER BY {}.id DESC", tSQLStatement, xFrom, xTo, gTableName);
         }
-
+        
         int64_t tRowID;
         return execute(tSQLStatement, tRowID, xCallback, xAddInfo);
     }

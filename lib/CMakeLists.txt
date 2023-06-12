@@ -40,6 +40,7 @@ set(wxBUILD_SHARED OFF CACHE BOOL "Build wx libraries as shared libs")
 set(wxBUILD_PRECOMP OFF CACHE BOOL "Use precompiled headers")
 set(wxBUILD_MONOLITHIC OFF CACHE BOOL "Build a single library")
 set(wxUSE_STL ON CACHE BOOL "use C++ STL classes")
+set(wxUSE_RC_MANIFEST ON CACHE BOOL "")
 
 FetchContent_Declare(
     wxWidgets

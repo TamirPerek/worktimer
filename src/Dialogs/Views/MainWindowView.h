@@ -60,8 +60,8 @@ namespace Dialogs::Views
 
     public:
         MainWindow();
-        MainWindow(wxWindow *parent, wxWindowID id = wxID_ANY, const wxString &title = wxT("WorkTimer"), const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxSize(216, 250), long style = wxCAPTION | wxCLOSE_BOX | wxMINIMIZE_BOX | wxTAB_TRAVERSAL, const wxString &name = wxT("MainWIndow"));
-        bool Create(wxWindow *parent, wxWindowID id = wxID_ANY, const wxString &title = wxT("WorkTimer"), const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxSize(216, 250), long style = wxCAPTION | wxCLOSE_BOX | wxMINIMIZE_BOX | wxTAB_TRAVERSAL, const wxString &name = wxT("MainWIndow"));
+        MainWindow(wxWindow *parent, wxWindowID id = wxID_ANY, const wxString &title = wxT("WorkTimer"), const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxSize(250, 300), long style = wxDEFAULT_FRAME_STYLE, const wxString &name = wxT("MainWIndow"));
+        bool Create(wxWindow *parent, wxWindowID id = wxID_ANY, const wxString &title = wxT("WorkTimer"), const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxSize(250, 300), long style = wxDEFAULT_FRAME_STYLE, const wxString &name = wxT("MainWIndow"));
 
         ~MainWindow();
     };
